@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--=============== FAVICON ===============-->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="assets/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="assets/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#a789d4">
+
+    <!--=============== BOXICONS ===============-->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+
+    <!--=============== SWIPER CSS ===============-->
+    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="assets/css/styles.css">
+
+    <title> Prashant's Portfolio </title>
+</head>
+
+<body>
+    <!--=============== HEADER ===============-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="#" class="nav__logo">Prashant</a>
+
+            <div class="nav__menu">
+                <ul class="nav__list">
+                    <li class="nav__item ">
+                        <a href="#home" class="nav__link">
+                            <i class='bx bx-home'></i>
+                        </a>
+                    </li>
+
+                    <li class="nav__item ">
+                        <a href="#about" class="nav__link">
+                            <i class='bx bx-user'></i>
+                        </a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="#skills" class="nav__link">
+                            <i class='bx bx-book'></i>
+                        </a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="#work" class="nav__link">
+                            <i class='bx bx-briefcase-alt-2'></i>
+                        </a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="#contact" class="nav__link">
+                            <i class='bx bx-message-square-dots'></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!--=============== theme change button ===============-->
+            <i class='bx bx-moon change-theme change-theme-button' id="theme-button"></i>
+
+        </nav>
+    </header>
+
+    <!--=============== MAIN ===============-->
+    <main class="main">
+        <!--=============== HOME ===============-->
+        <section class="home section" id="home">
+            <div class="home__container container grid">
+                <div class="home__data">
+                    <span class="home__greeting">Hello, I'm</span>
+                    <h1 class="home__name">Prashant Pratik Timalsina</h1>
+                    <h3 class="home__education">AI/ML Engineer</h3>
+
+                    <div class="home__button">
+                        <a download="" href="assets/pdf/PPT-Resume.pdf" class="button button--ghost">
+                            Download Resume
+                        </a>
+
+                        <a href="#about" class="button">About</a>
+                    </div>
+                </div>
+
+                <!-- <div class="home__handle">
+                    <img src="assets/img/pptt.png" alt="" class="home__img">
+                </div> -->
+                <div class="home__handle">
+    <img src="assets/img/pptt.png" alt="Prashant Pratik Timalsina" class="home__img">
+
+    <div class="home__terminal">
+        <div class="terminal__dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="terminal__line">
+            <span class="terminal__symbol">$</span> whoami
+        </div>
+
+        <div class="terminal__line terminal__command">
+            <span>prashant@linux:~$</span> build_a_brain
+        </div>
+    </div>
+</div>
+
+                <div class="home__social">
+                    <a href="#" target="_blank" class="home__social-link">
+                        <i class='bx bxl-linkedin'></i>
+                    </a>
+                    <a href="https://github.com/pratikprashant" target="_blank" class="home__social-link">
+                        <i class='bx bxl-github'></i>
+                    </a>
+                    <a href="#" target="_blank" class="home__social-link">
+                        <i class='bx bxl-dribbble'></i>
+                    </a>
+                </div>
+
+                <a href="#about" class="home__scroll">
+                    <i class='bx bx-mouse home__scroll-icon'></i>
+                    <span class="home__scroll-name">Scroll Down</span>
+                </a>
+            </div>
+        </section>
+
+        <!--=============== ABOUT ===============-->
+        <section class="about section" id="about">
+            <span class="section__subtitle">My Intro</span>
+            <h2 class="section__title">About Me</h2>
+
+            <div class="about__container container grid">
+                <img src="assets/img/ppt.png" alt="" class="about__img">
+
+                <div class="about__data">
+                    <div class="about__info">
+                        <div class="about__box">
+                            <i class='bx bx-award about__icon'></i>
+                            <h3 class="about__title">Experience</h3>
+                            <span class="about__subtitle">None</span>
+                        </div>
+                        <div class="about__box">
+                            <i class='bx bx-briefcase-alt about__icon'></i>
+                            <h3 class="about__title">Completed</h3>
+                            <span class="about__subtitle">3+ Projects</span>
+                        </div>
+                        <div class="about__box">
+                            <i class='bx bx-support about__icon'></i>
+                            <h3 class="about__title">Support</h3>
+                            <span class="about__subtitle">Online 24/7</span>
+                        </div>
+                    </div>
+
+                    <p class="about__description">
+                        I build AI that actually does something. From RAG powered assistants to machine learning systems and computer vision projects, I turn complex ideas into working applications.
+
+                    </p>
+
+                    <a href="#contact" class="button about__button-contact">Contact Me</a>
+                </div>
+            </div>
+        </section>
+
+        <!--=============== SKILLS ===============-->
+<section class="skills section" id="skills">
+
+    <span class="section__subtitle">What I Work With</span>
+    <h2 class="section__title">My Skills</h2>
+
+    <div class="skills__container container grid">
+
+        <!--=============== AI & MACHINE LEARNING ===============-->
+        <div class="skills__content">
+            <h3 class="skills__title">AI & Machine Learning</h3>
+
+            <div class="skills__box">
+
+                <div class="skills__group">
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Python</h3>
+                            <span class="skills__level">Advanced</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Machine Learning</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Scikit-learn</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="skills__group">
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Data Analysis</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Computer Vision</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Model Evaluation</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--=============== GENERATIVE AI ===============-->
+        <div class="skills__content">
+            <h3 class="skills__title">Generative AI</h3>
+
+            <div class="skills__box">
+
+                <div class="skills__group">
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">LLMs</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">RAG</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">AI APIs</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="skills__group">
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Embeddings</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Vector Databases</h3>
+                            <span class="skills__level">Basic</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Prompt Engineering</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--=============== DEVELOPMENT ===============-->
+        <div class="skills__content">
+            <h3 class="skills__title">Development</h3>
+
+            <div class="skills__box">
+
+                <div class="skills__group">
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">HTML & CSS</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Flask</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">REST APIs</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="skills__group">
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">SQL</h3>
+                            <span class="skills__level">Basic</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Git & GitHub</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Linux</h3>
+                            <span class="skills__level">Basic</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--=============== DATA & AI TOOLS ===============-->
+        <div class="skills__content">
+            <h3 class="skills__title">Data & AI Tools</h3>
+
+            <div class="skills__box">
+
+                <div class="skills__group">
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">NumPy</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Pandas</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Matplotlib</h3>
+                            <span class="skills__level">Basic</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="skills__group">
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">OpenCV</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Jupyter</h3>
+                            <span class="skills__level">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="skills__data">
+                        <i class='bx bxs-badge-check'></i>
+                        <div>
+                            <h3 class="skills__name">Hugging Face</h3>
+                            <span class="skills__level">Basic</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+        <!--=============== SERVICES ===============-->
+<section class="services section">
+    <span class="section__subtitle">What I Build</span>
+    <h2 class="section__title">My Expertise</h2>
+
+    <div class="services__container container grid">
+
+        <!--=============== MACHINE LEARNING ===============-->
+        <div class="services__card">
+
+            <h3 class="services__title">
+                Machine <br> Learning
+            </h3>
+
+            <span class="services__button">
+                See More <i class='bx bx-right-arrow services__icon'></i>
+            </span>
+
+            <div class="services__modal">
+                <div class="services__modal-content">
+
+                    <i class='bx bx-x services__modal-close'></i>
+
+                    <h3 class="services__modal-title">
+                        Machine Learning
+                    </h3>
+
+                    <p class="services__modal-description">
+                        I build machine learning solutions that transform
+                        real-world data into useful predictions, classifications,
+                        and insights.
+                    </p>
+
+                    <ul class="services__modal-list">
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Data preprocessing and cleaning.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Exploratory data analysis and feature engineering.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Machine learning model development.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Model evaluation and performance analysis.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Classification and prediction systems.
+                            </p>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <!--=============== GENERATIVE AI ===============-->
+        <div class="services__card">
+
+            <h3 class="services__title">
+                Generative <br> AI
+            </h3>
+
+            <span class="services__button">
+                See More <i class='bx bx-right-arrow services__icon'></i>
+            </span>
+
+            <div class="services__modal">
+                <div class="services__modal-content">
+
+                    <i class='bx bx-x services__modal-close'></i>
+
+                    <h3 class="services__modal-title">
+                        Generative AI
+                    </h3>
+
+                    <p class="services__modal-description">
+                        I build AI-powered applications using large language
+                        models and modern generative AI techniques to create
+                        intelligent and interactive experiences.
+                    </p>
+
+                    <ul class="services__modal-list">
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Large Language Model integration.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Retrieval-Augmented Generation (RAG) systems.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                AI API integration.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Embeddings and semantic search.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Context-aware AI assistants.
+                            </p>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <!--=============== AI APPLICATION DEVELOPMENT ===============-->
+        <div class="services__card">
+
+            <h3 class="services__title">
+                AI Application <br> Development
+            </h3>
+
+            <span class="services__button">
+                See More <i class='bx bx-right-arrow services__icon'></i>
+            </span>
+
+            <div class="services__modal">
+                <div class="services__modal-content">
+
+                    <i class='bx bx-x services__modal-close'></i>
+
+                    <h3 class="services__modal-title">
+                        AI Application Development
+                    </h3>
+
+                    <p class="services__modal-description">
+                        I turn AI and machine learning concepts into usable
+                        applications by connecting models, APIs, backends,
+                        and user interfaces.
+                    </p>
+
+                    <ul class="services__modal-list">
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                AI-powered web applications.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Python and Flask-based AI backends.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                REST API integration.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                AI model deployment and integration.
+                            </p>
+                        </li>
+
+                        <li class="services__modal-item">
+                            <i class='bx bx-check-circle'></i>
+                            <p class="services__modal-info">
+                                Building practical solutions from AI concepts.
+                            </p>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+        
+    <!--=============== WORK ===============-->
+<section class="work section" id="work">
+    <span class="section__subtitle">My Portfolio</span>
+    <h2 class="section__title">Recent Projects</h2>
+
+    <div class="work__filters">
+        <span class="work__item active-work" data-filter="all">All</span>
+        <span class="work__item" data-filter=".aiml">AI / ML</span>
+        <span class="work__item" data-filter=".genai">Generative AI</span>
+        <span class="work__item" data-filter=".other">Other</span>
+    </div>
+
+    <div class="work__container container grid">
+
+        <!--=============== PROJECT 1 ===============-->
+        <div class="work__card mix aiml">
+            <img src="assets/img/work1.jpg" alt="AI Machine Learning Project" class="work__img">
+
+            <h3 class="work__title">Earthquake Risk Prediction</h3>
+
+            <a href="#" class="work__button">
+                View Project <i class='bx bx-right-arrow work__icon'></i>
+            </a>
+        </div>
+
+
+        <!--=============== PROJECT 2 ===============-->
+        <div class="work__card mix genai">
+            <img src="assets/img/work2.jpg" alt="Generative AI Project" class="work__img">
+
+            <h3 class="work__title">RAG-Based AI Assistant</h3>
+
+            <a href="#" class="work__button">
+                View Project <i class='bx bx-right-arrow work__icon'></i>
+            </a>
+        </div>
+
+
+        <!--=============== PROJECT 3 ===============-->
+        <div class="work__card mix aiml">
+            <img src="assets/img/work3.jpg" alt="Machine Learning Project" class="work__img">
+
+            <h3 class="work__title">Handwritten Character Recognition</h3>
+
+            <a href="#" class="work__button">
+                View Project <i class='bx bx-right-arrow work__icon'></i>
+            </a>
+        </div>
+
+
+        <!--=============== PROJECT 4 ===============-->
+        <div class="work__card mix aiml">
+            <img src="assets/img/work4.jpg" alt="AI Machine Learning Project" class="work__img">
+
+            <h3 class="work__title">Machine Learning Project</h3>
+
+            <a href="#" class="work__button">
+                View Project <i class='bx bx-right-arrow work__icon'></i>
+            </a>
+        </div>
+
+
+        <!--=============== PROJECT 5 ===============-->
+        <div class="work__card mix other">
+            <img src="assets/img/work5.jpg" alt="AI Project" class="work__img">
+
+            <h3 class="work__title">AI Application</h3>
+
+            <a href="#" class="work__button">
+                View Project <i class='bx bx-right-arrow work__icon'></i>
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+        <!--=============== TESTIMONIALS ===============-->
+        <!-- <section class="testimonial section">
+            <span class="section__subtitle">My clients say</span>
+            <h2 class="section__title">Testimonials</h2>
+
+            <div class="testimonial__container container swiper">
+                <div class="swiper-wrapper">
+                    <div class="testimonial__card swiper-slide">
+                        <img src="assets/img/testimonial1.png" alt="" class="testimonial__img">
+
+                        <h3 class="testimonial__name">Jhon Doe</h3>
+                        <p class="testimonial__description">
+                            A really good job, all aspects of the project were done well.
+                            Very creative and thoughtful. I was very impressed and would recommend this to anyone.
+                        </p>
+                    </div>
+
+                    <div class="testimonial__card swiper-slide">
+                        <img src="assets/img/testimonial2.png" alt="" class="testimonial__img">
+
+                        <h3 class="testimonial__name">Ada Hill</h3>
+                        <p class="testimonial__description">
+                            A really good job, all aspects of the project were done well.
+                            Very creative and thoughtful. I was very impressed and would recommend this to anyone.
+                        </p>
+                    </div>
+
+                    <div class="testimonial__card swiper-slide">
+                        <img src="assets/img/testimonial3.png" alt="" class="testimonial__img">
+
+                        <h3 class="testimonial__name">Jessica Park</h3>
+                        <p class="testimonial__description">
+                            A really good job, all aspects of the project were done well.
+                            Very creative and thoughtful. I was very impressed and would recommend this to anyone.
+                        </p>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+        </section> -->
+
+        <!--=============== CONTACT ===============-->
+        <section class="contact section" id="contact">
+            <sapn class="section__subtitle">Get in touch</sapn>
+            <h3 class="section__title">Contact Me</h3>
+
+            <div class="contact__container container grid">
+                <div class="contact__content">
+                    <h3 class="contact__title contact__title-info">Talk to me</h3>
+
+                    <div class="contact__info">
+                        <div class="contact__card">
+                            <i class='bx bx-mail-send contact__card-icon'></i>
+                            <h3 class="contact__card-title">Email</h3>
+                            <span class="contact__card-data">mail@prashantpratik.com.np</span>
+
+                            <a href="mailto:mail@prashantpratik.com.np" target="_blank" class="contact__button">
+                                Write Me <i class='bx bx-right-arrow contact__button-icon'></i>
+                            </a>
+                        </div>
+
+                        <div class="contact__card">
+                            <i class='bx bxl-whatsapp contact__card-icon'></i>
+                            <h3 class="contact__card-title">Whatsapp</h3>
+                            <span class="contact__card-data">7991431586</span>
+
+                            <a href="https://api.whatsapp.com/send?phone=+917991431586&text=Hey there!" target="_blank"
+                                class="contact__button">
+                                Write Me <i class='bx bx-right-arrow contact__button-icon'></i>
+                            </a>
+                        </div>
+
+                        <div class="contact__card">
+                            <i class='bx bxl-twitter contact__card-icon'></i>
+                            <h3 class="contact__card-title">Twitter</h3>
+                            <span class="contact__card-data">usertw</span>
+
+                            <a href="https://twitter.com/usertw" target="_blank" class="contact__button">
+                                Write Me <i class='bx bx-right-arrow contact__button-icon'></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact__content">
+                    <h3 class="contact__title contact__title-form">Write Me your Message</h3>
+
+                    <form action="" class="contact__form">
+                        <div class="contact__form-div">
+                            <label for="" class="contact__form-tag">Name</label>
+                            <input type="text" placeholder="Enter name" class="contact__form-input">
+                        </div>
+
+                        <div class="contact__form-div">
+                            <label for="" class="contact__form-tag">Mail</label>
+                            <input type="text" placeholder="Enter email" class="contact__form-input">
+                        </div>
+
+                        <div class="contact__form-div contact__form-area">
+                            <label for="" class="contact__form-tag">Message</label>
+                            <textarea name="" id="" cols="30" rows="10" placeholder="Write your Message"
+                                class="contact__form-input "></textarea>
+                        </div>
+
+
+                        <button class="button">
+                            Send Message
+                        </button>
+                    </form>
+
+                </div>
+
+        </section>
+    </main>
+
+    <!--=============== FOOTER ===============-->
+    <footer class="footer">
+        <div class="footer__container container">
+            <h1 class="footer__title">Prashant</h1>
+
+            <ul class="footer__list">
+
+                <li class="footer__item">
+                    <a href="#" class="footer__link">Home</a>
+                </li>
+                <li class="footer__item">
+                    <a href="#about" class="footer__link">About</a>
+                </li>
+                <li class="footer__item">
+                    <a href="#skills" class="footer__link">Skills</a>
+                </li>
+                <li class="footer__item">
+                    <a href="#work" class="footer__link">Work</a>
+                </li>
+                <li class="footer__item">
+                    <a href="#contact" class="footer__link">Contact</a>
+                </li>
+            </ul>
+
+            <ul class="footer__social">
+                <li class="footer__social-item">
+                    <a href="#" target="_blank" class="footer__social-link">
+                        <i class='bx bxl-facebook footer__social-icon'></i>
+                    </a>
+                </li>
+                <li class="footer__social-item">
+                    <a href="#" target="_blank" class="footer__social-link">
+                        <i class='bx bxl-twitter footer__social-icon'></i>
+                    </a>
+                </li>
+                <li class="footer__social-item">
+                    <a href="#" target="_blank" class="footer__social-link">
+                        <i class='bx bxl-linkedin footer__social-icon'></i>
+                    </a>
+                </li>
+                <li class="footer__social-item">
+                    <a href="https://www.instagram.com/pratikprashant07/" target="_blank" class="footer__social-link">
+                        <i class='bx bxl-instagram footer__social-icon'></i>
+                    </a>
+                </li>
+            </ul>
+
+            <span class="footer__copy">
+                &#169; 2026 Prashant. All rights reserved.
+            </span>
+        </div>
+    </footer>
+
+    <!--=============== SCROLLREVEAL ===============-->
+
+    <!-- <script src="assets/js/scrollreveal.min.js"></script> -->
+    <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
+
+    <!--=============== SWIPER JS ===============-->
+    <script src="assets/js/swiper-bundle.min.js"></script>
+
+    <!--=============== MIXITUP FILTER ===============-->
+    <script src="assets/js/mixitup.min.js"></script>
+
+    <!--=============== MAIN JS ===============-->
+   <script src="assets/js/main.js"></script>
+
+<!-- AI CHATBOT -->
+<div class="chatbot" id="chatbot">
+
+    <button class="chatbot__toggle" id="chatbot-toggle">
+        <i class='bx bx-message-rounded-dots'></i>
+    </button>
+
+    <div class="chatbot__window" id="chatbot-window">
+        <div class="chatbot__header">
+            <h3>DNOVA</h3>
+        </div>
+
+        <iframe
+            class="chatbot__frame"
+            src="YOUR_CHATBOT_URL_HERE">
+        </iframe>
+    </div>
+
+</div>
+
+<script>
+const chatbot = document.getElementById("chatbot");
+const toggle = document.getElementById("chatbot-toggle");
+
+toggle.addEventListener("click", () => {
+    chatbot.classList.toggle("is-open");
+});
+</script>
+
+</body>
+</html>
+</body>
+
+</html>
