@@ -231,3 +231,45 @@ sr.reveal(`.footer, footer__container`, {
   origin: "bottom",
   distance: "30px",
 });
+
+
+function openPhishingDemo(event) {
+  event.preventDefault();
+  document.getElementById("phishing-demo").classList.add("active");
+}
+
+function closePhishingDemo() {
+  document.getElementById("phishing-demo").classList.remove("active");
+}
+
+async function checkPhishingURL() {
+  const url = document.getElementById("phishing-url-input").value;
+  const result = document.getElementById("phishing-result");
+
+  if (!url) {
+    result.textContent = "Please enter a URL.";
+    return;
+  }
+
+  result.textContent = "Analyzing...";
+
+  try {
+    const response = await fetch("https://prashant-ml-api.onrender.com/api/phishing", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        url: url
+      })
+    });
+
+    const data = await response.json();
+
+    result.textContent = data.result || data.error;
+
+  } catch (error) {
+    result.textContent = "Could not connect to the ML server.";
+    console.error(error);
+  }
+}
