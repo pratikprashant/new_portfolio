@@ -1501,19 +1501,6 @@ body.light-theme {
   transform: rotate(90deg);
 }
 
-/*========== CHAT AREA ==========*/
-
-.chatbot__frame {
-  width: 100%;
-  height: calc(100% - 72px);
-
-  border: none;
-
-  display: block;
-
-  background: var(--body-color);
-}
-
 /*========== MOBILE ==========*/
 
 @media screen and (max-width: 576px) {
