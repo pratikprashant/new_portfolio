@@ -360,3 +360,165 @@ input.addEventListener("keydown", (event) => {
 suggestions.querySelectorAll("button").forEach((btn) => {
   btn.addEventListener("click", () => sendMessage(btn.dataset.q));
 });
+
+/*=============== PROJECT MODAL ===============*/
+const projects = {
+  "character-recognition": {
+    tag: "AI / ML",
+    title: "Character Recognition",
+    description:
+      "A computer vision model that reads handwritten characters from images and classifies them.",
+    highlights: [
+      "Image preprocessing and normalization",
+      "Trained and evaluated a classification model",
+      "Tested on unseen handwriting samples",
+    ],
+    stack: ["Python", "OpenCV", "NumPy", "Scikit-learn"],
+    github: "https://github.com/pratikprashant",
+    demo: null,
+  },
+  "rag-assistant": {
+    tag: "Generative AI",
+    title: "RAG-Based AI Assistant",
+    description:
+      "An assistant that answers questions from my own documents by retrieving relevant context before generating a reply. It powers DNOVA on this site.",
+    highlights: [
+      "Embeddings and semantic search",
+      "Context-aware answers grounded in source data",
+      "Served through a Flask REST API",
+    ],
+    stack: ["Python", "Flask", "Embeddings", "Vector DB", "LLM API"],
+    github: "https://github.com/pratikprashant",
+    demo: "chatbot", // opens the DNOVA chat
+  },
+  "earthquake-risk": {
+    tag: "AI / ML",
+    title: "Earthquake Risk Prediction",
+    description:
+      "A machine learning model that estimates earthquake risk from historical seismic data.",
+    highlights: [
+      "Data cleaning and feature engineering",
+      "Compared multiple models",
+      "Evaluated with appropriate metrics",
+    ],
+    stack: ["Python", "Pandas", "Scikit-learn", "Matplotlib"],
+    github: "https://github.com/pratikprashant",
+    demo: null,
+  },
+  "phishing-detection": {
+    tag: "AI / ML",
+    title: "Phishing URL Detection",
+    description:
+      "A classifier that analyzes a URL's structure and features to flag likely phishing links.",
+    highlights: [
+      "URL feature extraction",
+      "Trained and evaluated a classification model",
+      "Deployed as a Flask API, try it live below",
+    ],
+    stack: ["Python", "Scikit-learn", "Flask", "REST API"],
+    github: "https://github.com/pratikprashant",
+    demo: "phishing", // opens the phishing demo
+  },
+  "churn-prediction": {
+    tag: "Other",
+    title: "Customer Churn Prediction",
+    description:
+      "A model that predicts which customers are likely to leave, so a business can act early.",
+    highlights: [
+      "Exploratory data analysis",
+      "Handled class imbalance",
+      "Model evaluation and comparison",
+    ],
+    stack: ["Python", "Pandas", "Scikit-learn", "Jupyter"],
+    github: "https://github.com/pratikprashant",
+    demo: null,
+  },
+};
+
+const projectModal = document.getElementById("project-modal");
+const pmImg = document.getElementById("project-modal-img");
+const pmTag = document.getElementById("project-modal-tag");
+const pmTitle = document.getElementById("project-modal-title");
+const pmDesc = document.getElementById("project-modal-desc");
+const pmList = document.getElementById("project-modal-list");
+const pmStack = document.getElementById("project-modal-stack");
+const pmGithub = document.getElementById("project-modal-github");
+const pmDemo = document.getElementById("project-modal-demo");
+
+let currentDemo = null;
+
+function openProjectModal(id, imgSrc) {
+  const p = projects[id];
+  if (!p) return;
+
+  pmImg.src = imgSrc;
+  pmImg.alt = p.title;
+  pmTag.textContent = p.tag;
+  pmTitle.textContent = p.title;
+  pmDesc.textContent = p.description;
+
+  pmList.replaceChildren(
+    ...p.highlights.map((text) => {
+      const li = document.createElement("li");
+      li.textContent = text;
+      return li;
+    })
+  );
+
+  pmStack.replaceChildren(
+    ...p.stack.map((tech) => {
+      const s = document.createElement("span");
+      s.textContent = tech;
+      return s;
+    })
+  );
+
+  pmGithub.href = p.github || "#";
+  pmGithub.classList.toggle("is-hidden", !p.github);
+
+  currentDemo = p.demo;
+  pmDemo.classList.toggle("is-hidden", !p.demo);
+
+  projectModal.classList.add("is-open");
+  projectModal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeProjectModal() {
+  projectModal.classList.remove("is-open");
+  projectModal.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+// Open from any "View Project" button
+document.querySelectorAll(".work__button[data-project]").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const card = btn.closest(".work__card");
+    openProjectModal(btn.dataset.project, card.querySelector("img").src);
+  });
+});
+
+// Live demo button: hand off to the phishing demo or the chatbot
+pmDemo.addEventListener("click", (e) => {
+  e.preventDefault();
+  closeProjectModal();
+  if (currentDemo === "phishing") {
+    document.getElementById("phishing-demo").classList.add("active");
+  } else if (currentDemo === "chatbot") {
+    setChatOpen(true);
+  }
+});
+
+// Close: X button, backdrop click, Escape
+document
+  .getElementById("project-modal-close")
+  .addEventListener("click", closeProjectModal);
+
+projectModal.addEventListener("click", (e) => {
+  if (e.target === projectModal) closeProjectModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeProjectModal();
+});
