@@ -278,73 +278,85 @@ async function checkPhishingURL() {
 // RAG Chatbot
 const chatbot = document.getElementById("chatbot");
 const toggle = document.getElementById("chatbot-toggle");
-
+const closeBtn = document.getElementById("chatbot-close");
 const input = document.getElementById("chatbot-input");
 const sendButton = document.getElementById("chatbot-send");
 const messages = document.getElementById("chatbot-messages");
+const suggestions = document.getElementById("chatbot-suggestions");
 
-toggle.addEventListener("click", () => {
-  chatbot.classList.toggle("is-open");
+let isSending = false;
+
+function setChatOpen(open) {
+  chatbot.classList.toggle("is-open", open);
+  toggle.setAttribute("aria-expanded", open);
+  if (open) setTimeout(() => input.focus(), 300);
+}
+
+toggle.addEventListener("click", () =>
+  setChatOpen(!chatbot.classList.contains("is-open"))
+);
+closeBtn.addEventListener("click", () => setChatOpen(false));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") setChatOpen(false);
 });
 
-async function sendMessage() {
+function addMessage(text, className) {
+  const el = document.createElement("div");
+  el.className = className;
+  el.textContent = text;
+  messages.appendChild(el);
+  messages.scrollTop = messages.scrollHeight;
+  return el;
+}
 
-  const question = input.value.trim();
+async function sendMessage(text) {
+  const question = (text ?? input.value).trim();
+  if (!question || isSending) return;
 
-  if (!question) return;
+  isSending = true;
+  sendButton.disabled = true;
+  suggestions.classList.add("is-hidden");
 
-  // Show user message
-  messages.innerHTML += `
-            <div class="user-message">
-                ${question}
-            </div>
-        `;
-
+  addMessage(question, "user-message");
   input.value = "";
 
-  // Temporary thinking message
+  // Typing indicator
   const thinking = document.createElement("div");
-  thinking.className = "bot-message";
-  thinking.textContent = "Thinking...";
+  thinking.className = "bot-message bot-message--typing";
+  thinking.innerHTML = "<span></span><span></span><span></span>";
   messages.appendChild(thinking);
-
   messages.scrollTop = messages.scrollHeight;
 
   try {
-
-    const response = await fetch(
-      "https://prashant-ml-api.onrender.com/api/rag",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          question: question
-        })
-      }
-    );
+    const response = await fetch("https://prashant-ml-api.onrender.com/api/rag", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    });
 
     const data = await response.json();
 
-    thinking.textContent = data.answer;
-
-  } catch (error) {
-
-    console.error(error);
-
+    thinking.classList.remove("bot-message--typing");
     thinking.textContent =
-      "Sorry, my brain is currently offline 🧠";
-
+      data.answer || data.error || "Hmm, I couldn't find an answer to that.";
+  } catch (error) {
+    console.error(error);
+    thinking.classList.remove("bot-message--typing");
+    thinking.textContent = "Sorry, my brain is currently offline 🧠";
+  } finally {
+    isSending = false;
+    sendButton.disabled = false;
+    messages.scrollTop = messages.scrollHeight;
+    input.focus();
   }
-
-  messages.scrollTop = messages.scrollHeight;
 }
 
-sendButton.addEventListener("click", sendMessage);
+sendButton.addEventListener("click", () => sendMessage());
 
 input.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    sendMessage();
-  }
+  if (event.key === "Enter") sendMessage();
+});
+
+suggestions.querySelectorAll("button").forEach((btn) => {
+  btn.addEventListener("click", () => sendMessage(btn.dataset.q));
 });
