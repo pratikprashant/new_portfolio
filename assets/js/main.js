@@ -233,6 +233,7 @@ sr.reveal(`.footer, footer__container`, {
 });
 
 
+// Phishing URl Detection 
 function openPhishingDemo(event) {
   event.preventDefault();
   document.getElementById("phishing-demo").classList.add("active");
@@ -273,3 +274,77 @@ async function checkPhishingURL() {
     console.error(error);
   }
 }
+
+// RAG Chatbot
+const chatbot = document.getElementById("chatbot");
+const toggle = document.getElementById("chatbot-toggle");
+
+const input = document.getElementById("chatbot-input");
+const sendButton = document.getElementById("chatbot-send");
+const messages = document.getElementById("chatbot-messages");
+
+toggle.addEventListener("click", () => {
+  chatbot.classList.toggle("is-open");
+});
+
+async function sendMessage() {
+
+  const question = input.value.trim();
+
+  if (!question) return;
+
+  // Show user message
+  messages.innerHTML += `
+            <div class="user-message">
+                ${question}
+            </div>
+        `;
+
+  input.value = "";
+
+  // Temporary thinking message
+  const thinking = document.createElement("div");
+  thinking.className = "bot-message";
+  thinking.textContent = "Thinking...";
+  messages.appendChild(thinking);
+
+  messages.scrollTop = messages.scrollHeight;
+
+  try {
+
+    const response = await fetch(
+      "https://prashant-ml-api.onrender.com/api/rag",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          question: question
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    thinking.textContent = data.answer;
+
+  } catch (error) {
+
+    console.error(error);
+
+    thinking.textContent =
+      "Sorry, my brain is currently offline 🧠";
+
+  }
+
+  messages.scrollTop = messages.scrollHeight;
+}
+
+sendButton.addEventListener("click", sendMessage);
+
+input.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    sendMessage();
+  }
+});

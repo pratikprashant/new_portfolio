@@ -817,7 +817,8 @@
                             <h3 class="contact__card-title">Instagram</h3>
                             <span class="contact__card-data">pratikprashant07</span>
 
-                            <a href="https://www.instagram.com/pratikprashant07/" target="_blank" class="contact__button">
+                            <a href="https://www.instagram.com/pratikprashant07/" target="_blank"
+                                class="contact__button">
                                 Write Me <i class='bx bx-right-arrow contact__button-icon'></i>
                             </a>
                         </div>
@@ -946,116 +947,36 @@
     <!--=============== MAIN JS ===============-->
     <script src="assets/js/main.js"></script>
 
-<!-- AI CHATBOT -->
-<div class="chatbot" id="chatbot">
+    <!-- AI CHATBOT -->
+    <div class="chatbot" id="chatbot">
 
-    <button class="chatbot__toggle" id="chatbot-toggle">
-        <i class='bx bx-message-rounded-dots'></i>
-    </button>
+        <button class="chatbot__toggle" id="chatbot-toggle">
+            <i class='bx bx-message-rounded-dots'></i>
+        </button>
 
-    <div class="chatbot__window" id="chatbot-window">
+        <div class="chatbot__window" id="chatbot-window">
 
-        <div class="chatbot__header">
-            <h3>DNOVA</h3>
-        </div>
-
-        <div class="chatbot__messages" id="chatbot-messages">
-            <div class="bot-message">
-                Hey! I'm DNOVA. Ask me anything about Prashant.
+            <div class="chatbot__header">
+                <h3>DNOVA</h3>
             </div>
-        </div>
 
-        <div class="chatbot__input">
-            <input
-                type="text"
-                id="chatbot-input"
-                placeholder="Ask me something..."
-                autocomplete="off"
-            >
+            <div class="chatbot__messages" id="chatbot-messages">
+                <div class="bot-message">
+                    Hey! I'm DNOVA. Ask me anything about Prashant.
+                </div>
+            </div>
 
-            <button id="chatbot-send">
-                <i class='bx bx-send'></i>
-            </button>
+            <div class="chatbot__input">
+                <input type="text" id="chatbot-input" placeholder="Ask me something..." autocomplete="off">
+
+                <button id="chatbot-send">
+                    <i class='bx bx-send'></i>
+                </button>
+            </div>
+
         </div>
 
     </div>
-
-</div>
- <script>
-    const chatbot = document.getElementById("chatbot");
-    const toggle = document.getElementById("chatbot-toggle");
-
-    const input = document.getElementById("chatbot-input");
-    const sendButton = document.getElementById("chatbot-send");
-    const messages = document.getElementById("chatbot-messages");
-
-    toggle.addEventListener("click", () => {
-        chatbot.classList.toggle("is-open");
-    });
-
-    async function sendMessage() {
-
-        const question = input.value.trim();
-
-        if (!question) return;
-
-        // Show user message
-        messages.innerHTML += `
-            <div class="user-message">
-                ${question}
-            </div>
-        `;
-
-        input.value = "";
-
-        // Temporary thinking message
-        const thinking = document.createElement("div");
-        thinking.className = "bot-message";
-        thinking.textContent = "Thinking...";
-        messages.appendChild(thinking);
-
-        messages.scrollTop = messages.scrollHeight;
-
-        try {
-
-            const response = await fetch(
-                "http://127.0.0.1:5000/api/rag",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        question: question
-                    })
-                }
-            );
-
-            const data = await response.json();
-
-            thinking.textContent = data.answer;
-
-        } catch (error) {
-
-            console.error(error);
-
-            thinking.textContent =
-                "Sorry, my brain is currently offline 🧠";
-
-        }
-
-        messages.scrollTop = messages.scrollHeight;
-    }
-
-    sendButton.addEventListener("click", sendMessage);
-
-    input.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
-    });
-</script>
-
 </body>
 
 </html>
