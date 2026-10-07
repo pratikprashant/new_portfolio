@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicons/favicon-32x32.png">
+    <meta name="theme-color" content="#a789d4">
+
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <title>Character Recognition | Prashant's Portfolio</title>
+</head>
+
+<body>
+    <!--=============== HEADER ===============-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="../index.html" class="nav__logo">Prashant</a>
+
+            <a href="../index.html#work" class="project__back">
+                <i class='bx bx-left-arrow-alt'></i> Back to projects
+            </a>
+
+            <i class='bx bx-moon change__theme' id="theme-button"></i>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!--=============== INTRO ===============-->
+        <section class="project section">
+            <div class="project__container container">
+                <span class="section__subtitle">AI / ML Project</span>
+                <h1 class="project__title">Character Recognition</h1>
+
+                <p class="project__intro">
+                    Draw a letter or digit and a convolutional neural network trained on EMNIST
+                    predicts it, showing its top three guesses with confidence scores.
+                </p>
+
+                <ul class="project__tags">
+                    <li>Python</li>
+                    <li>TensorFlow</li>
+                    <li>Keras</li>
+                    <li>CNN</li>
+                    <li>EMNIST</li>
+                    <li>Flask</li>
+                </ul>
+            </div>
+        </section>
+
+        <!--=============== DEMO ===============-->
+        <section class="project-demo">
+            <div class="container">
+                <div class="project__demo" id="demo">
+
+                    <div class="hcr-demo">
+
+    <!-- LEFT: drawing board -->
+    <div class="hcr-board">
+        <div class="hcr-board__top">
+            <span class="hcr-label"><i class='bx bx-pencil'></i> draw here</span>
+            <span class="hcr-hint">One character at a time</span>
+        </div>
+
+        <canvas id="hcr-canvas" width="320" height="320"></canvas>
+
+        <div class="hcr-buttons">
+            <button id="hcr-clear" type="button" class="button button--ghost">
+                <i class='bx bx-trash'></i> Clear
+            </button>
+            <button id="hcr-predict" type="button" class="button">
+                <i class='bx bx-brain'></i> Predict
+            </button>
+        </div>
+    </div>
+
+    <!-- RIGHT: model output -->
+    <div class="hcr-output">
+        <div class="terminal__dots">
+            <span></span><span></span><span></span>
+        </div>
+
+        <p class="hcr-cmd"><span>prashant@linux:~$</span> model.predict(canvas)</p>
+
+        <div class="hcr-output__result">
+            <div class="hcr-output__char" id="hcr-char">?</div>
+
+            <div class="hcr-output__meta">
+                <span class="hcr-output__label">Confidence</span>
+                <strong class="hcr-output__conf" id="hcr-conf">--</strong>
+                <p class="hcr-output__status" id="hcr-status">Draw something and press Predict.</p>
+            </div>
+        </div>
+
+        <div class="hcr-output__top">
+            <span class="hcr-output__label">Top 3 guesses</span>
+            <div id="hcr-bars"></div>
+        </div>
+    </div>
+
+</div>
+
+                </div>
+            </div>
+        </section>
+
+        <!--=============== INFO CARDS ===============-->
+        <section class="project-info section">
+            <div class="project__info container">
+
+                <div class="project__card">
+                    <i class='bx bx-data project__card-icon'></i>
+                    <h3 class="project__card-title">Dataset</h3>
+                    <p class="project__card-text">EMNIST [split name, e.g. Balanced], [number] classes, [number] training images of 28×28 grayscale characters.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-brain project__card-icon'></i>
+                    <h3 class="project__card-title">Model</h3>
+                    <p class="project__card-text">Write which model or algorithm you used.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-bar-chart-alt-2 project__card-icon'></i>
+                    <h3 class="project__card-title">Accuracy</h3>
+                    <p class="project__card-text">Write your test accuracy here.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bxl-github project__card-icon'></i>
+                    <h3 class="project__card-title">Source Code</h3>
+                    <a href="https://github.com/pratikprashant" target="_blank" class="project__card-link">
+                        View on GitHub <i class='bx bx-right-arrow'></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="project__footer">
+        <span class="footer__copy">&#169; 2026 Prashant. All rights reserved.</span>
+    </footer>
+
+    <script src="../assets/js/project.js"></script>
+</body>
+
+</html>

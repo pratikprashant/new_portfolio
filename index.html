@@ -683,9 +683,9 @@
 
                     <h3 class="work__title">Character Recognition</h3>
 
-                    <a href="#" class="work__button" data-project="character-recognition">
-    View Project <i class='bx bx-right-arrow work__icon'></i>
-</a>
+                    <a href="projects/character-recognition.html" class="work__button" data-project="character-recognition">
+                        View Project <i class='bx bx-right-arrow work__icon'></i>
+                    </a>
                 </div>
 
 
@@ -695,7 +695,7 @@
 
                     <h3 class="work__title">RAG-Based AI Assistant</h3>
 
-                    <a href="#" class="work__button">
+                    <a href="#rag-demo" class="work__button" onclick="openRagDemo(event)">
                         View Project <i class='bx bx-right-arrow work__icon'></i>
                     </a>
                 </div>
@@ -947,51 +947,52 @@
     <!--=============== MAIN JS ===============-->
     <!-- <script src="assets/js/main.js"></script> -->
 
-<!-- AI CHATBOT -->
-<div class="chatbot" id="chatbot">
+    <!-- AI CHATBOT -->
+    <div class="chatbot" id="chatbot">
 
-    <button class="chatbot__toggle" id="chatbot-toggle" aria-label="Toggle chat" aria-expanded="false">
-        <i class='bx bx-message-rounded-dots chatbot__toggle-open'></i>
-        <i class='bx bx-x chatbot__toggle-close'></i>
-    </button>
+        <button class="chatbot__toggle" id="chatbot-toggle" aria-label="Toggle chat" aria-expanded="false">
+            <i class='bx bx-message-rounded-dots chatbot__toggle-open'></i>
+            <i class='bx bx-x chatbot__toggle-close'></i>
+        </button>
 
-    <div class="chatbot__window" id="chatbot-window">
+        <div class="chatbot__window" id="chatbot-window">
 
-        <div class="chatbot__header">
-            <div class="chatbot__avatar"><i class='bx bx-bot'></i></div>
+            <div class="chatbot__header">
+                <div class="chatbot__avatar"><i class='bx bx-bot'></i></div>
 
-            <div class="chatbot__title">
-                <h3>DNOVA</h3>
-                <span class="chatbot__status">
-                    <i class="chatbot__status-dot"></i> dnova@prashant:~$online
-                </span>
+                <div class="chatbot__title">
+                    <h3>DNOVA</h3>
+                    <span class="chatbot__status">
+                        <i class="chatbot__status-dot"></i> dnova@prashant:~$online
+                    </span>
+                </div>
+
+                <button class="chatbot__minimize" id="chatbot-close" aria-label="Close chat">
+                    <i class='bx bx-x'></i>
+                </button>
             </div>
 
-            <button class="chatbot__minimize" id="chatbot-close" aria-label="Close chat">
-                <i class='bx bx-x'></i>
-            </button>
+            <div class="chatbot__messages" id="chatbot-messages">
+                <div class="bot-message">Hey! I'm DNOVA 👋 Ask me anything about Prashant: his projects, skills, or what
+                    he's building.</div>
+            </div>
+
+            <div class="chatbot__suggestions" id="chatbot-suggestions">
+                <button type="button" data-q="What projects has Prashant built?">Projects</button>
+                <button type="button" data-q="What are Prashant's main skills?">Skills</button>
+                <button type="button" data-q="How can I contact Prashant?">Contact</button>
+            </div>
+
+            <div class="chatbot__input">
+                <input type="text" id="chatbot-input" placeholder="Ask me something..." autocomplete="off">
+
+                <button id="chatbot-send" aria-label="Send message">
+                    <i class='bx bx-send'></i>
+                </button>
+            </div>
+
         </div>
-
-        <div class="chatbot__messages" id="chatbot-messages">
-            <div class="bot-message">Hey! I'm DNOVA 👋 Ask me anything about Prashant: his projects, skills, or what he's building.</div>
-        </div>
-
-        <div class="chatbot__suggestions" id="chatbot-suggestions">
-            <button type="button" data-q="What projects has Prashant built?">Projects</button>
-            <button type="button" data-q="What are Prashant's main skills?">Skills</button>
-            <button type="button" data-q="How can I contact Prashant?">Contact</button>
-        </div>
-
-        <div class="chatbot__input">
-            <input type="text" id="chatbot-input" placeholder="Ask me something..." autocomplete="off">
-
-            <button id="chatbot-send" aria-label="Send message">
-                <i class='bx bx-send'></i>
-            </button>
-        </div>
-
     </div>
-</div>
 
     <script src="assets/js/main.js"></script>
 </body>
