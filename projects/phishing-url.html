@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--=============== FAVICON ===============-->
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#a789d4">
+
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <title>Phishing URL Detection | Prashant's Portfolio</title>
+</head>
+
+<body>
+    <!--=============== HEADER ===============-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="../index.html" class="nav__logo">Prashant</a>
+
+            <a href="../index.html#work" class="project__back">
+                <i class='bx bx-left-arrow-alt'></i> Back to projects
+            </a>
+
+            <i class='bx bx-moon change__theme' id="theme-button"></i>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!--=============== INTRO ===============-->
+        <section class="project section">
+            <div class="project__container container">
+                <span class="section__subtitle">AI / ML Project</span>
+                <h1 class="project__title">Phishing URL Detection</h1>
+
+                <p class="project__intro">
+                    Paste a link and get a verdict. The URL's structure is checked in your browser,
+                    then a machine learning model and live domain checks decide if it looks like phishing.
+                </p>
+
+                <ul class="project__tags">
+                    <li>Python</li>
+                    <li>Scikit-learn</li>
+                    <li>Feature Engineering</li>
+                    <li>DNS / RDAP</li>
+                    <li>Flask</li>
+                </ul>
+            </div>
+        </section>
+
+        <!--=============== DEMO ===============-->
+        <section class="project-demo">
+            <div class="container">
+                <div class="project__demo" id="demo">
+
+                    <div class="ph-demo">
+
+                        <!-- LEFT: input -->
+                        <form class="ph-form" id="ph-form" autocomplete="off" novalidate>
+                            <div class="ph-form__top">
+                                <span class="hcr-label"><i class='bx bx-link'></i> enter url</span>
+                                <span class="hcr-hint">Nothing is opened or visited</span>
+                            </div>
+
+                            <input type="text" id="ph-url" class="ph-form__input"
+                                placeholder="https://example.com/login" spellcheck="false" maxlength="2000">
+
+                            <div class="hcr-buttons">
+                                <button id="ph-clear" type="button" class="button button--ghost">
+                                    <i class='bx bx-trash'></i> Clear
+                                </button>
+                                <button id="ph-analyze" type="submit" class="button">
+                                    <i class='bx bx-shield-quarter'></i> Analyze
+                                </button>
+                            </div>
+
+                            <div class="ph-examples">
+                                <span class="hcr-hint">Try an example</span>
+                                <div class="chatbot__suggestions ph-examples__list" id="ph-examples">
+                                    <button type="button" data-url="https://www.wikipedia.org">Safe-looking</button>
+                                    <button type="button" data-url="http://secure-login.paypa1-account-verify.example.com/update?id=1">Suspicious</button>
+                                    <button type="button" data-url="http://192.168.10.5@bit.ly/confirm-password">Tricky</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- RIGHT: results -->
+                        <div class="hcr-output ph-output">
+                            <div class="terminal__dots">
+                                <span></span><span></span><span></span>
+                            </div>
+
+                            <p class="hcr-cmd"><span>prashant@linux:~$</span> model.predict(url)</p>
+
+                            <div class="hcr-output__result">
+                                <div class="hcr-output__char ph-output__icon" id="ph-icon">
+                                    <i class='bx bx-shield-quarter'></i>
+                                </div>
+
+                                <div class="hcr-output__meta">
+                                    <span class="hcr-output__label">Verdict</span>
+                                    <strong class="hcr-output__conf" id="ph-verdict">--</strong>
+                                    <p class="hcr-output__status" id="ph-status">Enter a URL and press Analyze.</p>
+                                </div>
+                            </div>
+
+                            <div class="hcr-output__top">
+                                <span class="hcr-output__label">Phishing probability</span>
+                                <div class="ph-meter">
+                                    <div class="ph-meter__track">
+                                        <div class="ph-meter__fill" id="ph-meter-fill"></div>
+                                    </div>
+                                    <span class="ph-meter__pct" id="ph-meter-pct">--</span>
+                                </div>
+                            </div>
+
+                            <div class="hcr-output__top">
+                                <span class="hcr-output__label">URL format checks</span>
+                                <ul class="ph-checks" id="ph-format"></ul>
+                            </div>
+
+                            <div class="hcr-output__top">
+                                <span class="hcr-output__label">Domain checks</span>
+                                <ul class="ph-checks" id="ph-domain"></ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!--=============== INFO CARDS ===============-->
+        <section class="project-info section">
+            <div class="project__info container">
+
+                <div class="project__card">
+                    <i class='bx bx-data project__card-icon'></i>
+                    <h3 class="project__card-title">Dataset</h3>
+                    <p class="project__card-text">Write your dataset source, number of URLs and the phishing / legitimate split.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-brain project__card-icon'></i>
+                    <h3 class="project__card-title">Model</h3>
+                    <p class="project__card-text">Write which model you used and which URL features it learns from.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-bar-chart-alt-2 project__card-icon'></i>
+                    <h3 class="project__card-title">Accuracy</h3>
+                    <p class="project__card-text">Write your test accuracy, precision and recall here.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bxl-github project__card-icon'></i>
+                    <h3 class="project__card-title">Source Code</h3>
+                    <a href="https://github.com/pratikprashant" target="_blank" class="project__card-link">
+                        View on GitHub <i class='bx bx-right-arrow'></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="project__footer">
+        <span class="footer__copy">&#169; 2026 Prashant. All rights reserved.</span>
+    </footer>
+
+    <script src="../assets/js/project.js"></script>
+    <script src="../assets/js/phishing-detection.js"></script>
+</body>
+
+</html>

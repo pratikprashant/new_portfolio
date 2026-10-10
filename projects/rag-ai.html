@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--=============== FAVICON ===============-->
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#a789d4">
+
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <title>RAG-Based AI Assistant | Prashant's Portfolio</title>
+</head>
+
+<body>
+    <!--=============== HEADER ===============-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="../index.html" class="nav__logo">Prashant</a>
+
+            <a href="../index.html#work" class="project__back">
+                <i class='bx bx-left-arrow-alt'></i> Back to projects
+            </a>
+
+            <i class='bx bx-moon change__theme' id="theme-button"></i>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!--=============== INTRO ===============-->
+        <section class="project section">
+            <div class="project__container container">
+                <span class="section__subtitle">Generative AI Project</span>
+                <h1 class="project__title">RAG-Based AI Assistant</h1>
+
+                <p class="project__intro">
+                    Ask a question and the assistant retrieves the most relevant passages from its
+                    knowledge base, then generates an answer grounded in them, with sources shown.
+                </p>
+
+                <ul class="project__tags">
+                    <li>Python</li>
+                    <li>LLMs</li>
+                    <li>RAG</li>
+                    <li>Embeddings</li>
+                    <li>Vector DB</li>
+                    <li>Flask</li>
+                </ul>
+            </div>
+        </section>
+
+        <!--=============== DEMO ===============-->
+        <section class="project-demo">
+            <div class="container">
+                <div class="project__demo" id="demo">
+
+                    <div class="rag-demo">
+
+                        <!-- LEFT: chat -->
+                        <div class="rag-chat">
+                            <div class="rag-chat__top">
+                                <span class="hcr-label"><i class='bx bx-chat'></i> ask the assistant</span>
+                                <button type="button" id="rag-clear" class="rag-chat__clear">
+                                    <i class='bx bx-trash'></i> Clear
+                                </button>
+                            </div>
+
+                            <div class="rag-chat__messages" id="rag-messages">
+                                <div class="bot-message">Hi! Ask me a question and I'll answer using my knowledge base. Write what it contains here.</div>
+                            </div>
+
+                            <div class="chatbot__suggestions" id="rag-suggestions">
+                                <!-- Replace with questions your knowledge base can answer -->
+                                <button type="button" data-q="What is this assistant built on?">What is this built on?</button>
+                                <button type="button" data-q="What documents do you know about?">What do you know?</button>
+                                <button type="button" data-q="Give me a quick summary.">Quick summary</button>
+                            </div>
+
+                            <form class="rag-chat__input" id="rag-form" autocomplete="off">
+                                <input type="text" id="rag-input" placeholder="Ask a question..." maxlength="500">
+                                <button type="submit" id="rag-send" aria-label="Send question">
+                                    <i class='bx bx-send'></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- RIGHT: retrieval panel -->
+                        <div class="hcr-output rag-output">
+                            <div class="terminal__dots">
+                                <span></span><span></span><span></span>
+                            </div>
+
+                            <p class="hcr-cmd"><span>prashant@linux:~$</span> rag.retrieve(query)</p>
+
+                            <div class="rag-steps" id="rag-steps">
+                                <span class="rag-step" data-step="embed"><i class='bx bx-vector'></i> Embed</span>
+                                <span class="rag-step" data-step="retrieve"><i class='bx bx-search-alt'></i> Retrieve</span>
+                                <span class="rag-step" data-step="generate"><i class='bx bx-bot'></i> Generate</span>
+                            </div>
+
+                            <p class="hcr-output__status" id="rag-status">Ask something to see the retrieved sources.</p>
+
+                            <div class="hcr-output__top">
+                                <span class="hcr-output__label">Retrieved sources</span>
+                                <div id="rag-sources" class="rag-sources"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!--=============== INFO CARDS ===============-->
+        <section class="project-info section">
+            <div class="project__info container">
+
+                <div class="project__card">
+                    <i class='bx bx-data project__card-icon'></i>
+                    <h3 class="project__card-title">Knowledge Base</h3>
+                    <p class="project__card-text">Write what documents the assistant uses and how they are chunked.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-brain project__card-icon'></i>
+                    <h3 class="project__card-title">Model</h3>
+                    <p class="project__card-text">Write the LLM, embedding model and vector database you used.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-bar-chart-alt-2 project__card-icon'></i>
+                    <h3 class="project__card-title">How It Works</h3>
+                    <p class="project__card-text">Query is embedded, top-k chunks are retrieved, and the LLM answers from them.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bxl-github project__card-icon'></i>
+                    <h3 class="project__card-title">Source Code</h3>
+                    <a href="https://github.com/pratikprashant" target="_blank" class="project__card-link">
+                        View on GitHub <i class='bx bx-right-arrow'></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="project__footer">
+        <span class="footer__copy">&#169; 2026 Prashant. All rights reserved.</span>
+    </footer>
+
+    <script src="../assets/js/project.js"></script>
+    <script src="../assets/js/rag-assistant.js"></script>
+</body>
+
+</html>

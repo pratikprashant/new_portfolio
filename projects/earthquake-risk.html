@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--=============== FAVICON ===============-->
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#a789d4">
+
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Leaflet (interactive map) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <title>Earthquake Risk Prediction | Prashant's Portfolio</title>
+</head>
+
+<body>
+    <!--=============== HEADER ===============-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="../index.html" class="nav__logo">Prashant</a>
+
+            <a href="../index.html#work" class="project__back">
+                <i class='bx bx-left-arrow-alt'></i> Back to projects
+            </a>
+
+            <i class='bx bx-moon change__theme' id="theme-button"></i>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!--=============== INTRO ===============-->
+        <section class="project section">
+            <div class="project__container container">
+                <span class="section__subtitle">AI / ML Project</span>
+                <h1 class="project__title">Earthquake Risk Prediction</h1>
+
+                <p class="project__intro">
+                    Enter seismic details for a location and a machine learning model
+                    estimates the earthquake risk level, along with its confidence.
+                </p>
+
+                <ul class="project__tags">
+                    <li>Python</li>
+                    <li>Scikit-learn</li>
+                    <li>Pandas</li>
+                    <li>NumPy</li>
+                    <li>Flask</li>
+                </ul>
+            </div>
+        </section>
+
+        <!--=============== DEMO ===============-->
+        <section class="project-demo">
+            <div class="container">
+                <div class="project__demo" id="demo">
+
+                    <div class="eq-demo">
+
+                        <!-- LEFT: input form -->
+                        <form class="eq-form" id="eq-form" autocomplete="off">
+                            <div class="eq-form__top">
+                                <span class="hcr-label"><i class='bx bx-slider-alt'></i> input features</span>
+                                <span class="hcr-hint">Fill in all fields</span>
+                            </div>
+
+                            <div class="eq-field">
+                                <label for="eq-place" class="eq-field__label">Place in Nepal</label>
+                                <div class="eq-search">
+                                    <input type="text" id="eq-place" name="place"
+                                        placeholder="e.g. Kathmandu, Pokhara" class="eq-field__input">
+                                    <button type="button" id="eq-search" class="eq-search__btn" aria-label="Search place">
+                                        <i class='bx bx-search'></i>
+                                    </button>
+                                </div>
+                                <span class="hcr-hint" id="eq-msg">Type a place and search, or click the map.</span>
+                            </div>
+
+                            <div class="eq-coords">
+                                <div class="eq-field">
+                                    <label for="eq-latitude" class="eq-field__label">Latitude</label>
+                                    <input type="text" id="eq-latitude" name="latitude" placeholder="--"
+                                        class="eq-field__input" readonly>
+                                </div>
+
+                                <div class="eq-field">
+                                    <label for="eq-longitude" class="eq-field__label">Longitude</label>
+                                    <input type="text" id="eq-longitude" name="longitude" placeholder="--"
+                                        class="eq-field__input" readonly>
+                                </div>
+                            </div>
+
+                            <div class="hcr-buttons">
+                                <button id="eq-reset" type="reset" class="button button--ghost">
+                                    <i class='bx bx-reset'></i> Reset
+                                </button>
+                                <button id="eq-predict" type="submit" class="button">
+                                    <i class='bx bx-pulse'></i> Predict
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- RIGHT: interactive map of Nepal -->
+                        <div class="eq-map-wrap">
+                            <div class="eq-form__top">
+                                <span class="hcr-label"><i class='bx bx-map-alt'></i> nepal map</span>
+                                <span class="hcr-hint">Click to pick a location</span>
+                            </div>
+                            <div id="eq-map" class="eq-map"></div>
+                        </div>
+
+                        <!-- BOTTOM: model output -->
+                        <div class="hcr-output eq-output">
+                            <div class="terminal__dots">
+                                <span></span><span></span><span></span>
+                            </div>
+
+                            <p class="hcr-cmd"><span>prashant@linux:~$</span> model.predict(features)</p>
+
+                            <div class="hcr-output__result">
+                                <div class="hcr-output__char eq-output__icon" id="eq-icon">
+                                    <i class='bx bx-pulse'></i>
+                                </div>
+
+                                <div class="hcr-output__meta">
+                                    <span class="hcr-output__label">Risk level</span>
+                                    <strong class="hcr-output__conf" id="eq-level">--</strong>
+                                    <p class="hcr-output__status" id="eq-status">Enter values and press Predict.</p>
+                                </div>
+                            </div>
+
+                            <div class="hcr-output__top">
+                                <span class="hcr-output__label">Risk probability</span>
+                                <div class="eq-meter">
+                                    <div class="eq-meter__track">
+                                        <div class="eq-meter__fill" id="eq-meter-fill"></div>
+                                    </div>
+                                    <span class="eq-meter__pct" id="eq-meter-pct">--</span>
+                                </div>
+                                <div class="eq-meter__scale">
+                                    <span>Low</span><span>Moderate</span><span>High</span>
+                                </div>
+                            </div>
+
+                            <div class="hcr-output__top">
+                                <span class="hcr-output__label">Class probabilities</span>
+                                <div id="eq-bars"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!--=============== INFO CARDS ===============-->
+        <section class="project-info section">
+            <div class="project__info container">
+
+                <div class="project__card">
+                    <i class='bx bx-data project__card-icon'></i>
+                    <h3 class="project__card-title">Dataset</h3>
+                    <p class="project__card-text">Write your dataset source, number of records and features here.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-brain project__card-icon'></i>
+                    <h3 class="project__card-title">Model</h3>
+                    <p class="project__card-text">Write which model or algorithm you used.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-bar-chart-alt-2 project__card-icon'></i>
+                    <h3 class="project__card-title">Accuracy</h3>
+                    <p class="project__card-text">Write your test accuracy here.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bxl-github project__card-icon'></i>
+                    <h3 class="project__card-title">Source Code</h3>
+                    <a href="https://github.com/pratikprashant" target="_blank" class="project__card-link">
+                        View on GitHub <i class='bx bx-right-arrow'></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="project__footer">
+        <span class="footer__copy">&#169; 2026 Prashant. All rights reserved.</span>
+    </footer>
+
+    <script src="../assets/js/project.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../assets/js/earthquake.js"></script>
+</body>
+
+</html>

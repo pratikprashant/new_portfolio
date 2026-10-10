@@ -92,17 +92,15 @@ function scrollActive() {
   sections.forEach((current) => {
     const sectionHeight = current.offsetHeight,
       sectionTop = current.offsetTop - 58,
-      sectionId = current.getAttribute("id");
+      sectionId = current.getAttribute("id"),
+      link = document.querySelector(".nav__menu a[href*=" + sectionId + "]");
 
-    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-      document
-        .querySelector(".nav__menu a[href*=" + sectionId + "]")
-        .classList.add("active-link");
-    } else {
-      document
-        .querySelector(".nav__menu a[href*=" + sectionId + "]")
-        .classList.remove("active-link");
-    }
+    if (!link) return; // section has no nav icon
+
+    link.classList.toggle(
+      "active-link",
+      scrollY > sectionTop && scrollY <= sectionTop + sectionHeight
+    );
   });
 }
 window.addEventListener("scroll", scrollActive);
@@ -147,8 +145,8 @@ themeButton.addEventListener("click", () => {
 const sr = ScrollReveal({
   origin: "top",
   distance: "60px",
-  duration: 2500,
-  delay: 400,
+  duration: 1200,
+  delay: 200,
   reset: true,
 });
 
@@ -190,7 +188,7 @@ sr.reveal(`.skills__content`, {
   distance: "30px",
 });
 
-sr.reveal(`.services__title, services__button`, {
+sr.reveal(`.services__title, .services__button`, {
   delay: 100,
   scale: 0.9,
   origin: "top",
@@ -225,7 +223,7 @@ sr.reveal(`.contact__form, .contact__title-form`, {
   distance: "30px",
 });
 
-sr.reveal(`.footer, footer__container`, {
+sr.reveal(`.footer, .footer__container`, {
   delay: 100,
   scale: 0.9,
   origin: "bottom",
@@ -360,3 +358,57 @@ input.addEventListener("keydown", (event) => {
 suggestions.querySelectorAll("button").forEach((btn) => {
   btn.addEventListener("click", () => sendMessage(btn.dataset.q));
 });
+
+/*=============== EDUCATION TIMELINE ANIMATION ===============*/
+(() => {
+  const timeline = document.querySelector(".education__timeline");
+  if (!timeline) return;
+
+  const items = timeline.querySelectorAll(".education__item");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // No animation support or preference: show everything as-is
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    items.forEach((item) => item.classList.add("is-visible"));
+    return;
+  }
+
+  // The hidden start state in the CSS only exists once this class is set,
+  // so the section is never invisible if JS fails to load.
+  document.documentElement.classList.add("education-js");
+
+  // Reveal each item when it scrolls into view
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.2, rootMargin: "0px 0px -8% 0px" }
+  );
+  items.forEach((item) => observer.observe(item));
+
+  // Glowing line grows as you scroll through the section
+  let ticking = false;
+
+  const updateProgress = () => {
+    const rect = timeline.getBoundingClientRect();
+    const p = (window.innerHeight * 0.6 - rect.top) / rect.height;
+    timeline.style.setProperty("--edu-p", Math.min(1, Math.max(0, p)).toFixed(3));
+    ticking = false;
+  };
+
+  const onScroll = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateProgress);
+    }
+  };
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  updateProgress();
+})();
