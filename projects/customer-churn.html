@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--=============== FAVICON ===============-->
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#a789d4">
+
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <title>Customer Churn Prediction | Prashant's Portfolio</title>
+</head>
+
+<body>
+    <!--=============== HEADER ===============-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="../index.html" class="nav__logo">Prashant</a>
+
+            <a href="../index.html#work" class="project__back">
+                <i class='bx bx-left-arrow-alt'></i> Back to projects
+            </a>
+
+            <i class='bx bx-moon change__theme' id="theme-button"></i>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!--=============== INTRO ===============-->
+        <section class="project section">
+            <div class="project__container container">
+                <span class="section__subtitle">Machine Learning Project</span>
+                <h1 class="project__title">Customer Churn Prediction</h1>
+
+                <p class="project__intro">
+                    Describe a customer's plan and billing details and the model estimates how likely
+                    they are to leave, which factors drive that risk, and what could keep them.
+                </p>
+
+                <ul class="project__tags">
+                    <li>Python</li>
+                    <li>Scikit-learn</li>
+                    <li>Pandas</li>
+                    <li>Feature Engineering</li>
+                    <li>Flask</li>
+                </ul>
+            </div>
+        </section>
+
+        <!--=============== DEMO ===============-->
+        <section class="project-demo">
+            <div class="container">
+                <div class="project__demo" id="demo">
+
+                    <div class="ch-demo">
+
+                        <!-- LEFT: customer profile -->
+                        <form class="ch-form" id="ch-form" autocomplete="off">
+                            <div class="ch-form__top">
+                                <span class="hcr-label"><i class='bx bx-user'></i> customer profile</span>
+                                <span class="hcr-hint">Adjust and predict</span>
+                            </div>
+
+                            <!-- Presets -->
+                            <div class="chatbot__suggestions ch-presets" id="ch-presets">
+                                <button type="button" data-preset="loyal">Loyal customer</button>
+                                <button type="button" data-preset="risky">At-risk customer</button>
+                            </div>
+
+                            <!-- NOTE: these fields follow the common Telco churn dataset.
+                                 Rename / add / remove to match your model's features. -->
+                            <div class="ch-field">
+                                <label for="ch-tenure" class="ch-field__label">
+                                    Tenure <output id="ch-tenure-out" class="ch-field__value">12 months</output>
+                                </label>
+                                <input type="range" id="ch-tenure" name="tenure" min="0" max="72" step="1" value="12"
+                                    class="ch-range">
+                            </div>
+
+                            <div class="ch-field">
+                                <label for="ch-monthly" class="ch-field__label">
+                                    Monthly charges <output id="ch-monthly-out" class="ch-field__value">$70</output>
+                                </label>
+                                <input type="range" id="ch-monthly" name="monthly_charges" min="20" max="120" step="1"
+                                    value="70" class="ch-range">
+                            </div>
+
+                            <div class="ch-field">
+                                <label for="ch-contract" class="ch-field__label">Contract</label>
+                                <select id="ch-contract" name="contract" class="ch-select">
+                                    <option value="Month-to-month">Month-to-month</option>
+                                    <option value="One year">One year</option>
+                                    <option value="Two year">Two year</option>
+                                </select>
+                            </div>
+
+                            <div class="ch-field">
+                                <label for="ch-internet" class="ch-field__label">Internet service</label>
+                                <select id="ch-internet" name="internet_service" class="ch-select">
+                                    <option value="DSL">DSL</option>
+                                    <option value="Fiber optic">Fiber optic</option>
+                                    <option value="No">None</option>
+                                </select>
+                            </div>
+
+                            <div class="ch-field">
+                                <label for="ch-payment" class="ch-field__label">Payment method</label>
+                                <select id="ch-payment" name="payment_method" class="ch-select">
+                                    <option value="Electronic check">Electronic check</option>
+                                    <option value="Mailed check">Mailed check</option>
+                                    <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+                                    <option value="Credit card (automatic)">Credit card (automatic)</option>
+                                </select>
+                            </div>
+
+                            <div class="ch-row">
+                                <div class="ch-field">
+                                    <label for="ch-support" class="ch-field__label">Tech support</label>
+                                    <select id="ch-support" name="tech_support" class="ch-select">
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+                                </div>
+
+                                <div class="ch-field">
+                                    <label for="ch-paperless" class="ch-field__label">Paperless billing</label>
+                                    <select id="ch-paperless" name="paperless_billing" class="ch-select">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="hcr-buttons">
+                                <button id="ch-reset" type="reset" class="button button--ghost">
+                                    <i class='bx bx-reset'></i> Reset
+                                </button>
+                                <button id="ch-predict" type="submit" class="button">
+                                    <i class='bx bx-line-chart'></i> Predict
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- RIGHT: model output -->
+                        <div class="hcr-output ch-output">
+                            <div class="terminal__dots">
+                                <span></span><span></span><span></span>
+                            </div>
+
+                            <p class="hcr-cmd"><span>prashant@linux:~$</span> model.predict(customer)</p>
+
+                            <div class="hcr-output__result">
+                                <div class="hcr-output__char ch-output__icon" id="ch-icon">
+                                    <i class='bx bx-user'></i>
+                                </div>
+
+                                <div class="hcr-output__meta">
+                                    <span class="hcr-output__label">Prediction</span>
+                                    <strong class="hcr-output__conf" id="ch-verdict">--</strong>
+                                    <p class="hcr-output__status" id="ch-status">Set the details and press Predict.</p>
+                                </div>
+                            </div>
+
+                            <div class="hcr-output__top">
+                                <span class="hcr-output__label">Churn probability</span>
+                                <div class="ch-meter">
+                                    <div class="ch-meter__track">
+                                        <div class="ch-meter__fill" id="ch-meter-fill"></div>
+                                    </div>
+                                    <span class="ch-meter__pct" id="ch-meter-pct">--</span>
+                                </div>
+                                <div class="ch-meter__scale">
+                                    <span>Stays</span><span>At risk</span><span>Leaves</span>
+                                </div>
+                            </div>
+
+                            <div class="hcr-output__top" id="ch-factors-wrap" hidden>
+                                <span class="hcr-output__label">What drives this</span>
+                                <div id="ch-factors" class="ch-factors"></div>
+                                <div class="ch-legend">
+                                    <span><i class="ch-legend__dot ch-bad"></i> raises churn risk</span>
+                                    <span><i class="ch-legend__dot ch-ok"></i> lowers it</span>
+                                </div>
+                            </div>
+
+                            <div class="hcr-output__top" id="ch-tips-wrap" hidden>
+                                <span class="hcr-output__label">Suggested retention actions</span>
+                                <ul class="ch-tips" id="ch-tips"></ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!--=============== INFO CARDS ===============-->
+        <section class="project-info section">
+            <div class="project__info container">
+
+                <div class="project__card">
+                    <i class='bx bx-data project__card-icon'></i>
+                    <h3 class="project__card-title">Dataset</h3>
+                    <p class="project__card-text">Write your dataset source, number of customers and the churn / no-churn split.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-brain project__card-icon'></i>
+                    <h3 class="project__card-title">Model</h3>
+                    <p class="project__card-text">Write which model you used and how you handled class imbalance.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-bar-chart-alt-2 project__card-icon'></i>
+                    <h3 class="project__card-title">Accuracy</h3>
+                    <p class="project__card-text">Write your test accuracy, precision, recall and ROC-AUC here.</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bxl-github project__card-icon'></i>
+                    <h3 class="project__card-title">Source Code</h3>
+                    <a href="https://github.com/pratikprashant" target="_blank" class="project__card-link">
+                        View on GitHub <i class='bx bx-right-arrow'></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="project__footer">
+        <span class="footer__copy">&#169; 2026 Prashant. All rights reserved.</span>
+    </footer>
+
+    <script src="../assets/js/project.js"></script>
+    <script src="../assets/js/churn-prediction.js"></script>
+</body>
+
+</html>

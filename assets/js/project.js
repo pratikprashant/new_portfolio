@@ -1074,3 +1074,265 @@ if (hcrCanvas) {
     });
   });
 })();
+
+
+/*=============== CUSTOMER CHURN PREDICTION DEMO ===============*/
+(() => {
+  // ---- CONFIG: change to your backend ----
+  const API_URL = "http://127.0.0.1:5000/predict-churn";
+
+  /*
+    Request:  POST JSON with the form fields (names match the inputs' name="" attributes):
+      { tenure, monthly_charges, contract, internet_service,
+        payment_method, tech_support, paperless_billing }
+
+    Expected response (adjust parseResponse() if yours differs):
+    {
+      "prediction": "churn",              // "churn" | "stay"   (optional)
+      "churn_probability": 0.78,          // 0-1
+      "factors": [                        // optional: top drivers
+        { "name": "Month-to-month contract", "impact": 0.31 },    // + raises churn risk
+        { "name": "Tenure", "impact": -0.18 }                     // - lowers it
+      ]
+    }
+  */
+
+  const form = document.getElementById("ch-form");
+  if (!form) return;
+
+  const predictBtn = document.getElementById("ch-predict");
+  const presetsEl = document.getElementById("ch-presets");
+
+  const tenureEl = document.getElementById("ch-tenure");
+  const monthlyEl = document.getElementById("ch-monthly");
+  const tenureOut = document.getElementById("ch-tenure-out");
+  const monthlyOut = document.getElementById("ch-monthly-out");
+
+  const iconEl = document.getElementById("ch-icon");
+  const verdictEl = document.getElementById("ch-verdict");
+  const statusEl = document.getElementById("ch-status");
+  const fillEl = document.getElementById("ch-meter-fill");
+  const pctEl = document.getElementById("ch-meter-pct");
+  const factorsWrap = document.getElementById("ch-factors-wrap");
+  const factorsEl = document.getElementById("ch-factors");
+  const tipsWrap = document.getElementById("ch-tips-wrap");
+  const tipsEl = document.getElementById("ch-tips");
+
+  const STATE_CLASSES = ["ch-ok", "ch-warn", "ch-bad"];
+
+  const PRESETS = {
+    loyal: {
+      tenure: 60,
+      monthly_charges: 55,
+      contract: "Two year",
+      internet_service: "DSL",
+      payment_method: "Bank transfer (automatic)",
+      tech_support: "Yes",
+      paperless_billing: "No",
+    },
+    risky: {
+      tenure: 2,
+      monthly_charges: 95,
+      contract: "Month-to-month",
+      internet_service: "Fiber optic",
+      payment_method: "Electronic check",
+      tech_support: "No",
+      paperless_billing: "Yes",
+    },
+  };
+
+  /*=============== FORM HELPERS ===============*/
+  const updateLabels = () => {
+    const t = Number(tenureEl.value);
+    tenureOut.textContent = `${t} month${t === 1 ? "" : "s"}`;
+    monthlyOut.textContent = `$${monthlyEl.value}`;
+  };
+
+  tenureEl.addEventListener("input", updateLabels);
+  monthlyEl.addEventListener("input", updateLabels);
+  updateLabels();
+
+  const getValues = () => ({
+    tenure: Number(form.elements.tenure.value),
+    monthly_charges: Number(form.elements.monthly_charges.value),
+    contract: form.elements.contract.value,
+    internet_service: form.elements.internet_service.value,
+    payment_method: form.elements.payment_method.value,
+    tech_support: form.elements.tech_support.value,
+    paperless_billing: form.elements.paperless_billing.value,
+  });
+
+  const applyPreset = (values) => {
+    Object.entries(values).forEach(([name, val]) => {
+      form.elements[name].value = val;
+    });
+    updateLabels();
+  };
+
+  /*=============== OUTPUT HELPERS ===============*/
+  const setStatus = (msg, isError = false) => {
+    statusEl.textContent = msg;
+    statusEl.classList.toggle("is-error", isError);
+  };
+
+  const setState = (cls, iconName, verdict, pct) => {
+    [iconEl, fillEl].forEach((el) => {
+      el.classList.remove(...STATE_CLASSES);
+      if (cls) el.classList.add(cls);
+    });
+    iconEl.innerHTML = `<i class='bx ${iconName}'></i>`;
+    verdictEl.textContent = verdict;
+    if (pct == null) {
+      pctEl.textContent = "--";
+      fillEl.style.width = "0";
+    } else {
+      pctEl.textContent = `${pct}%`;
+      fillEl.style.width = `${pct}%`;
+    }
+  };
+
+  const resetOutput = () => {
+    setState(null, "bx-user", "--", null);
+    setStatus("Set the details and press Predict.");
+    factorsWrap.hidden = true;
+    tipsWrap.hidden = true;
+    factorsEl.innerHTML = "";
+    tipsEl.innerHTML = "";
+  };
+
+  const parseResponse = (data) => {
+    let p = data.churn_probability ?? data.probability;
+    if (typeof p !== "number") {
+      const pred = String(data.prediction ?? "").toLowerCase();
+      p = /churn|yes|^1$/.test(pred) ? 1 : 0;
+    }
+    return { p, factors: Array.isArray(data.factors) ? data.factors : [] };
+  };
+
+  /*=============== FACTORS ===============*/
+  const renderFactors = (factors) => {
+    factorsEl.innerHTML = "";
+    if (!factors.length) {
+      factorsWrap.hidden = true;
+      return;
+    }
+    factorsWrap.hidden = false;
+
+    const top = [...factors]
+      .sort((a, b) => Math.abs(b.impact) - Math.abs(a.impact))
+      .slice(0, 5);
+    const max = Math.max(...top.map((f) => Math.abs(f.impact))) || 1;
+
+    top.forEach((f) => {
+      const raises = f.impact > 0;
+      const row = document.createElement("div");
+      row.className = "ch-factor";
+
+      const name = document.createElement("span");
+      name.className = "ch-factor__name";
+      name.textContent = f.name;
+
+      const track = document.createElement("div");
+      track.className = "ch-factor__track";
+      const fill = document.createElement("div");
+      fill.className = `ch-factor__fill ${raises ? "ch-bad" : "ch-ok"}`;
+      track.appendChild(fill);
+
+      const val = document.createElement("span");
+      val.className = "ch-factor__val";
+      val.textContent = `${raises ? "+" : "-"}${Math.abs(f.impact).toFixed(2)}`;
+
+      row.append(name, track, val);
+      factorsEl.appendChild(row);
+
+      requestAnimationFrame(() => {
+        fill.style.width = `${(Math.abs(f.impact) / max) * 100}%`;
+      });
+    });
+  };
+
+  /*=============== RETENTION TIPS (client-side, based on inputs) ===============*/
+  const buildTips = (v) => {
+    const tips = [];
+    if (v.contract === "Month-to-month") tips.push("Offer a discount for moving to a one- or two-year contract.");
+    if (v.tech_support === "No" && v.internet_service !== "No") tips.push("Offer a free trial of tech support.");
+    if (v.tenure < 12) tips.push("Schedule an onboarding check-in during the first year.");
+    if (v.monthly_charges > 85) tips.push("Review the plan and suggest a better-value bundle.");
+    if (v.payment_method === "Electronic check") tips.push("Encourage automatic payments with a small credit.");
+    if (!tips.length) tips.push("Reward loyalty with an exclusive perk or early upgrade.");
+    return tips.slice(0, 3);
+  };
+
+  const renderTips = (values) => {
+    tipsEl.innerHTML = "";
+    tipsWrap.hidden = false;
+    buildTips(values).forEach((text) => {
+      const li = document.createElement("li");
+      li.className = "ch-tip";
+      const icon = document.createElement("i");
+      icon.className = "bx bx-bulb";
+      const span = document.createElement("span");
+      span.textContent = text;
+      li.append(icon, span);
+      tipsEl.appendChild(li);
+    });
+  };
+
+  /*=============== SUBMIT ===============*/
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const values = getValues();
+
+    predictBtn.disabled = true;
+    setState(null, "bx-loader-alt bx-spin", "Analyzing...", null);
+    setStatus("Running the model...");
+    factorsWrap.hidden = true;
+    tipsWrap.hidden = true;
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      if (!res.ok) throw new Error(`Server responded ${res.status}`);
+
+      const { p, factors } = parseResponse(await res.json());
+      const pct = Math.round(p * 1000) / 10;
+
+      if (p >= 0.6) {
+        setState("ch-bad", "bx-user-x", "Likely to churn", pct);
+        setStatus("High risk. This customer may leave soon.");
+      } else if (p >= 0.35) {
+        setState("ch-warn", "bx-user-minus", "At risk", pct);
+        setStatus("Some warning signs. Worth reaching out.");
+      } else {
+        setState("ch-ok", "bx-user-check", "Likely to stay", pct);
+        setStatus("Low churn risk for this profile.");
+      }
+
+      renderFactors(factors);
+      if (p >= 0.35) renderTips(values);
+    } catch (err) {
+      console.error(err);
+      setState(null, "bx-wifi-off", "Model offline", null);
+      setStatus("Couldn't reach the model. Is the server running?", true);
+    } finally {
+      predictBtn.disabled = false;
+    }
+  });
+
+  /*=============== EVENTS ===============*/
+  presetsEl.querySelectorAll("button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      applyPreset(PRESETS[btn.dataset.preset]);
+      form.requestSubmit();
+    });
+  });
+
+  form.addEventListener("reset", () => {
+    // reset fires before values revert, so wait a tick
+    setTimeout(updateLabels, 0);
+    resetOutput();
+  });
+})();
