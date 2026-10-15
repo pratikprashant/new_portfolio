@@ -271,8 +271,10 @@ if (hcrCanvas) {
 
   /*---------- Map ----------*/
   const isDark = () => !document.body.classList.contains("light-theme");
-  const tileUrl = (dark) =>
-    `https://{s}.basemaps.cartocdn.com/${dark ? "dark_all" : "light_all"}/{z}/{x}/{y}{r}.png`;
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: "&copy; OpenStreetMap contributors",
+}).addTo(map);
 
   const map = L.map(mapEl, {
     center: CENTER,
@@ -282,17 +284,6 @@ if (hcrCanvas) {
     maxBoundsViscosity: 0.8,
   });
 
-  const tiles = L.tileLayer(tileUrl(isDark()), {
-    subdomains: "abcd",
-    maxZoom: 18,
-    attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-  }).addTo(map);
-
-  // Switch map style when the theme button is used
-  new MutationObserver(() => tiles.setUrl(tileUrl(isDark()))).observe(document.body, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
 
   const defaultIcon = new L.Icon.Default();
   const riskLayer = L.layerGroup().addTo(map);   // risk box
