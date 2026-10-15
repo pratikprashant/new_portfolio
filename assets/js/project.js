@@ -427,6 +427,30 @@ if (hcrCanvas) {
   });
 
   // 2) type a place name
+    // Common places: found instantly, and they work even if the online lookup is blocked
+  const PLACES = {
+    "kathmandu": [27.7172, 85.3240],
+    "pokhara": [28.2096, 83.9856],
+    "lalitpur": [27.6588, 85.3247],
+    "patan": [27.6588, 85.3247],
+    "bhaktapur": [27.6710, 85.4298],
+    "biratnagar": [26.4525, 87.2718],
+    "birgunj": [27.0104, 84.8770],
+    "bharatpur": [27.6833, 84.4333],
+    "butwal": [27.7006, 83.4483],
+    "dharan": [26.8065, 87.2846],
+    "janakpur": [26.7288, 85.9260],
+    "hetauda": [27.4287, 85.0322],
+    "nepalgunj": [28.0500, 81.6167],
+    "dhangadhi": [28.6833, 80.6000],
+    "lumbini": [27.4833, 83.2760],
+    "gorkha": [28.0000, 84.6333],
+    "dhulikhel": [27.6195, 85.5380],
+    "namche bazaar": [27.8069, 86.7140],
+    "lukla": [27.6881, 86.7314],
+    "jomsom": [28.7800, 83.7230],
+  };
+
   async function searchPlace() {
     const q = placeEl.value.trim();
     if (!q) {
@@ -434,18 +458,37 @@ if (hcrCanvas) {
       return false;
     }
 
+    console.log("[earthquake] searching for:", q);
     searchBtn.disabled = true;
     setMsg("Searching...");
 
     try {
+      // 1) built-in list
+      const known = PLACES[q.toLowerCase().replace(/,.*$/, "").trim()];
+      if (known) {
+        applyCoords(known[0], known[1], { fly: true, lookup: false });
+        placeDirty = false;
+        setMsg(`Found: ${q}`);
+        return true;
+      }
+
+      // 2) online lookup (OpenStreetMap), with an 8 second limit
       const params = new URLSearchParams({
         q, format: "json", limit: "1", countrycodes: "np", "accept-language": "en",
       });
-      const res = await fetch(`${NOMINATIM}/search?${params}`);
-      const list = await res.json();
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      let res;
+      try {
+        res = await fetch(`${NOMINATIM}/search?${params}`, { signal: controller.signal });
+      } finally {
+        clearTimeout(timer);
+      }
+      if (!res.ok) throw new Error(`Lookup service responded ${res.status}`);
 
+      const list = await res.json();
       if (!list.length) {
-        setMsg(`Could not find "${q}" in Nepal.`, true);
+        setMsg(`Could not find "${q}" in Nepal. Try a bigger nearby town.`, true);
         return false;
       }
 
@@ -455,19 +498,13 @@ if (hcrCanvas) {
       setMsg(`Found: ${p.display_name.split(",").slice(0, 2).join(",")}`);
       return true;
     } catch (error) {
-      console.error(error);
-      setMsg("Search failed. Try again or click the map.", true);
+      console.error("[earthquake] search failed:", error);
+      setMsg("Online place lookup failed. Try a bigger city, type coordinates, or click the map.", true);
       return false;
     } finally {
       searchBtn.disabled = false;
     }
   }
-
-  searchBtn.addEventListener("click", searchPlace);
-
-  placeEl.addEventListener("input", () => {
-    placeDirty = true;
-  });
 
   placeEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
