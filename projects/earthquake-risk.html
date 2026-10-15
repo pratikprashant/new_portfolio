@@ -47,17 +47,18 @@
                 <h1 class="project__title">Earthquake Risk Prediction</h1>
 
                 <p class="project__intro">
-                    Enter seismic details for a location and a machine learning model
-                    estimates the earthquake risk level, along with its confidence.
-                </p>
+    Pick a place in Nepal and the model combines live earthquake data from USGS
+    with an XGBoost model to estimate the area's current earthquake risk score.
+</p>
 
-                <ul class="project__tags">
-                    <li>Python</li>
-                    <li>Scikit-learn</li>
-                    <li>Pandas</li>
-                    <li>NumPy</li>
-                    <li>Flask</li>
-                </ul>
+<ul class="project__tags">
+    <li>Python</li>
+    <li>XGBoost</li>
+    <li>Pandas</li>
+    <li>USGS API</li>
+    <li>Leaflet</li>
+    <li>Flask</li>
+</ul>
             </div>
         </section>
 
@@ -72,7 +73,7 @@
                         <form class="eq-form" id="eq-form" autocomplete="off">
                             <div class="eq-form__top">
                                 <span class="hcr-label"><i class='bx bx-slider-alt'></i> input features</span>
-                                <span class="hcr-hint">Fill in all fields</span>
+                                <span class="hcr-hint">Pick a place in Nepal</span>
                             </div>
 
                             <div class="eq-field">
@@ -122,42 +123,48 @@
 
                         <!-- BOTTOM: model output -->
                         <div class="hcr-output eq-output">
-                            <div class="terminal__dots">
-                                <span></span><span></span><span></span>
-                            </div>
+    <div class="terminal__dots">
+        <span></span><span></span><span></span>
+    </div>
 
-                            <p class="hcr-cmd"><span>prashant@linux:~$</span> model.predict(features)</p>
+    <p class="hcr-cmd"><span>prashant@linux:~$</span> model.predict(features)</p>
 
-                            <div class="hcr-output__result">
-                                <div class="hcr-output__char eq-output__icon" id="eq-icon">
-                                    <i class='bx bx-pulse'></i>
-                                </div>
+    <div class="hcr-output__result">
+        <div class="hcr-output__char eq-output__icon" id="eq-icon">
+            <i class='bx bx-pulse'></i>
+        </div>
 
-                                <div class="hcr-output__meta">
-                                    <span class="hcr-output__label">Risk level</span>
-                                    <strong class="hcr-output__conf" id="eq-level">--</strong>
-                                    <p class="hcr-output__status" id="eq-status">Enter values and press Predict.</p>
-                                </div>
-                            </div>
+        <div class="hcr-output__meta">
+            <span class="hcr-output__label">Risk level</span>
+            <strong class="hcr-output__conf" id="eq-level">--</strong>
+            <p class="hcr-output__status" id="eq-status">Pick a place on the map and press Predict.</p>
+        </div>
+    </div>
 
-                            <div class="hcr-output__top">
-                                <span class="hcr-output__label">Risk probability</span>
-                                <div class="eq-meter">
-                                    <div class="eq-meter__track">
-                                        <div class="eq-meter__fill" id="eq-meter-fill"></div>
-                                    </div>
-                                    <span class="eq-meter__pct" id="eq-meter-pct">--</span>
-                                </div>
-                                <div class="eq-meter__scale">
-                                    <span>Low</span><span>Moderate</span><span>High</span>
-                                </div>
-                            </div>
+    <div class="hcr-output__top">
+        <span class="hcr-output__label">Risk score (0 to 100)</span>
+        <div class="eq-meter">
+            <div class="eq-meter__track">
+                <div class="eq-meter__fill" id="eq-meter-fill"></div>
+            </div>
+            <span class="eq-meter__pct" id="eq-meter-pct">--</span>
+        </div>
+        <div class="eq-meter__scale">
+            <span>Low</span><span>Moderate</span><span>High</span>
+        </div>
+    </div>
 
-                            <div class="hcr-output__top">
-                                <span class="hcr-output__label">Class probabilities</span>
-                                <div id="eq-bars"></div>
-                            </div>
-                        </div>
+    <div class="eq-stats" id="eq-stats"></div>
+
+    <div class="hcr-output__top">
+        <span class="hcr-output__label">What pushed the score up (red) or down (green)</span>
+        <div id="eq-bars"></div>
+    </div>
+
+    <p class="eq-disclaimer">
+        Educational demo. Earthquakes cannot be predicted, and this is not an official forecast.
+    </p>
+</div>
 
                     </div>
 
