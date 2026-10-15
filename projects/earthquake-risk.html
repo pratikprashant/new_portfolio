@@ -89,18 +89,18 @@
                             </div>
 
                             <div class="eq-coords">
-                                <div class="eq-field">
-                                    <label for="eq-latitude" class="eq-field__label">Latitude</label>
-                                    <input type="text" id="eq-latitude" name="latitude" placeholder="--"
-                                        class="eq-field__input" readonly>
-                                </div>
+    <div class="eq-field">
+        <label for="eq-latitude" class="eq-field__label">Latitude</label>
+        <input type="text" inputmode="decimal" id="eq-latitude" name="latitude"
+            placeholder="e.g. 27.7172" class="eq-field__input">
+    </div>
 
-                                <div class="eq-field">
-                                    <label for="eq-longitude" class="eq-field__label">Longitude</label>
-                                    <input type="text" id="eq-longitude" name="longitude" placeholder="--"
-                                        class="eq-field__input" readonly>
-                                </div>
-                            </div>
+    <div class="eq-field">
+        <label for="eq-longitude" class="eq-field__label">Longitude</label>
+        <input type="text" inputmode="decimal" id="eq-longitude" name="longitude"
+            placeholder="e.g. 85.3240" class="eq-field__input">
+    </div>
+</div>
 
                             <div class="hcr-buttons">
                                 <button id="eq-reset" type="reset" class="button button--ghost">
@@ -116,8 +116,7 @@
                         <div class="eq-map-wrap">
                             <div class="eq-form__top">
                                 <span class="hcr-label"><i class='bx bx-map-alt'></i> nepal map</span>
-                                <span class="hcr-hint">Click to pick a location</span>
-                            </div>
+<span class="hcr-hint" id="eq-msg">Type a place, type coordinates, or click the map. They fill each other in.</span>                            </div>
                             <div id="eq-map" class="eq-map"></div>
                         </div>
 
@@ -166,6 +165,24 @@
     </p>
 </div>
 
+<!-- LIVE ALERTS -->
+<div class="hcr-output eq-alerts">
+    <div class="eq-alerts__top">
+        <span class="hcr-label"><span class="eq-live-dot"></span> live earthquake alerts</span>
+        <span class="hcr-hint" id="eq-alerts-time">Loading...</span>
+    </div>
+
+    <div class="eq-banner" id="eq-banner" hidden></div>
+
+    <ul class="eq-alerts__list" id="eq-alerts-list"></ul>
+
+    <p class="eq-disclaimer">
+        Source: USGS, last 7 days, magnitude 2.5+, refreshed every minute. Click an alert to see it on the map.
+        This is not an official warning. For official information, follow Nepal's
+        National Earthquake Monitoring and Research Center.
+    </p>
+</div>
+
                     </div>
 
                 </div>
@@ -211,8 +228,8 @@
     </footer>
 
     <script src="../assets/js/project.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="../assets/js/earthquake.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../assets/js/earthquake.js"></script>
 </body>
 
 </html>

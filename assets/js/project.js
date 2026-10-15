@@ -210,6 +210,8 @@ if (hcrCanvas) {
   resetBoard();
 }
 
+
+// earthquakeee
 (() => {
   const mapEl = document.getElementById("eq-map");
   if (!mapEl || typeof L === "undefined") return;
@@ -220,16 +222,20 @@ if (hcrCanvas) {
     ? "http://127.0.0.1:5000"
     : "https://prashant-ml-api.onrender.com";
   const PREDICT_URL = `${API_BASE}/api/earthquake_predict`;
+  const USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
+  const NOMINATIM = "https://nominatim.openstreetmap.org";
 
   // Start loading the model as soon as the page opens
   fetch(`${API_BASE}/api/earthquake_warmup`).catch(() => {});
 
   const NEPAL = { minLat: 26.0, maxLat: 30.5, minLon: 80.0, maxLon: 88.5 };
+  const CENTER = [28.39, 84.12];
+  const DEFAULT_MSG = "Type a place, type coordinates, or click the map. They fill each other in.";
 
   const LEVELS = {
-    low: { cls: "eq-low", icon: "bx-check-shield" },
-    moderate: { cls: "eq-moderate", icon: "bx-error" },
-    high: { cls: "eq-high", icon: "bx-error-alt" },
+    low: { cls: "eq-low", icon: "bx-check-shield", color: "#4ade80" },
+    moderate: { cls: "eq-moderate", icon: "bx-error", color: "#facc15" },
+    high: { cls: "eq-high", icon: "bx-error-alt", color: "#f87171" },
   };
 
   const FEATURE_LABELS = {
@@ -259,13 +265,17 @@ if (hcrCanvas) {
   const statsEl = document.getElementById("eq-stats");
   const barsEl = document.getElementById("eq-bars");
 
+  const bannerEl = document.getElementById("eq-banner");
+  const alertsListEl = document.getElementById("eq-alerts-list");
+  const alertsTimeEl = document.getElementById("eq-alerts-time");
+
   /*---------- Map ----------*/
   const isDark = () => !document.body.classList.contains("light-theme");
   const tileUrl = (dark) =>
     `https://{s}.basemaps.cartocdn.com/${dark ? "dark_all" : "light_all"}/{z}/{x}/{y}{r}.png`;
 
   const map = L.map(mapEl, {
-    center: [28.39, 84.12],
+    center: CENTER,
     zoom: 7,
     minZoom: 6,
     maxBounds: [[25.5, 79.5], [31, 89]],
@@ -284,8 +294,18 @@ if (hcrCanvas) {
     attributeFilter: ["class"],
   });
 
+  const defaultIcon = new L.Icon.Default();
+  const riskLayer = L.layerGroup().addTo(map);   // risk box
+  const quakeLayer = L.layerGroup().addTo(map);  // recent quakes near the point
+  const alertLayer = L.layerGroup().addTo(map);  // quake picked from the live list
   let marker = null;
-  const quakeLayer = L.layerGroup().addTo(map);
+
+  /*---------- State ----------*/
+  let current = null;        // { lat, lon, inNepal }
+  let placeDirty = false;    // true when the place text was typed but not searched yet
+  let geoToken = 0;          // used to ignore out-of-date lookups
+  let pendingGeo = Promise.resolve();
+  let coordTimer = null;
 
   /*---------- Small helpers ----------*/
   function setMsg(text, isError = false) {
@@ -298,8 +318,13 @@ if (hcrCanvas) {
     statusEl.classList.toggle("is-error", isError);
   }
 
-  const inNepal = (lat, lon) =>
+  const inBox = (lat, lon) =>
     lat >= NEPAL.minLat && lat <= NEPAL.maxLat && lon >= NEPAL.minLon && lon <= NEPAL.maxLon;
+
+  function parseCoord(value) {
+    const n = parseFloat(String(value).trim().replace(",", "."));
+    return Number.isFinite(n) ? n : null;
+  }
 
   function resetResult() {
     iconEl.className = "hcr-output__char eq-output__icon";
@@ -312,38 +337,101 @@ if (hcrCanvas) {
     statsEl.replaceChildren();
     barsEl.replaceChildren();
     quakeLayer.clearLayers();
+    riskLayer.clearLayers();
+    if (marker) {
+      marker.setIcon(defaultIcon);
+      marker.unbindPopup();
+    }
+  }
+
+  /*---------- Name from coordinates (reverse lookup) ----------*/
+  async function reverseGeocode(lat, lon) {
+    const token = ++geoToken;
+    setMsg("Looking up the place name...");
+
+    try {
+      const params = new URLSearchParams({
+        lat: lat.toFixed(5),
+        lon: lon.toFixed(5),
+        format: "jsonv2",
+        zoom: "12",
+        addressdetails: "1",
+        "accept-language": "en",
+      });
+      const res = await fetch(`${NOMINATIM}/reverse?${params}`);
+      const data = await res.json();
+      if (token !== geoToken) return; // a newer choice replaced this one
+
+      const a = data.address || {};
+
+      if (a.country_code && a.country_code !== "np") {
+        if (current) current.inNepal = false;
+        placeEl.value = "";
+        setMsg("That point is outside Nepal. Pick a place inside the country.", true);
+        return;
+      }
+
+      const name = a.city || a.town || a.village || a.municipality || a.hamlet || a.suburb || a.county || "";
+      const region = a.state_district || a.state || "";
+      const label = [name, region].filter(Boolean).join(", ");
+
+      placeEl.value = label;
+      placeDirty = false;
+      setMsg(label ? `Selected ${lat.toFixed(4)}, ${lon.toFixed(4)}` : "No place name here, but the coordinates still work.");
+    } catch (error) {
+      console.error(error);
+      if (token === geoToken) setMsg("Could not look up the place name. The coordinates still work.");
+    }
   }
 
   /*---------- Choosing a location ----------*/
-  function setLocation(lat, lon, fly) {
-    if (!inNepal(lat, lon)) {
-      setMsg("That point is outside Nepal. Pick a place inside the country.", true);
+  // write:  put the numbers into the lat/lon boxes
+  // lookup: find the place name for these numbers
+  function applyCoords(lat, lon, { fly = false, write = true, lookup = true } = {}) {
+    geoToken++; // cancel any older lookup
+
+    if (!inBox(lat, lon)) {
+      current = null;
+      setMsg("Coordinates must be inside Nepal (latitude 26 to 30.5, longitude 80 to 88.5).", true);
       return false;
     }
 
-    latEl.value = lat.toFixed(4);
-    lonEl.value = lon.toFixed(4);
+    current = { lat, lon, inNepal: true };
 
-    if (marker) marker.setLatLng([lat, lon]);
-    else marker = L.marker([lat, lon]).addTo(map);
+    if (write) {
+      latEl.value = lat.toFixed(4);
+      lonEl.value = lon.toFixed(4);
+    }
+
+    if (marker) {
+      marker.setLatLng([lat, lon]);
+      marker.setIcon(defaultIcon);
+      marker.unbindPopup();
+    } else {
+      marker = L.marker([lat, lon]).addTo(map);
+    }
+
+    quakeLayer.clearLayers();
+    riskLayer.clearLayers();
 
     if (fly) map.flyTo([lat, lon], Math.max(map.getZoom(), 9));
 
-    quakeLayer.clearLayers();
-    setMsg(`Selected ${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+    pendingGeo = lookup ? reverseGeocode(lat, lon) : Promise.resolve();
     return true;
   }
 
+  // 1) click on the map
   map.on("click", (e) => {
     const p = e.latlng.wrap();
-    setLocation(p.lat, p.lng, false);
+    applyCoords(p.lat, p.lng);
   });
 
+  // 2) type a place name
   async function searchPlace() {
     const q = placeEl.value.trim();
     if (!q) {
       setMsg("Type a place name first.", true);
-      return;
+      return false;
     }
 
     searchBtn.disabled = true;
@@ -351,34 +439,73 @@ if (hcrCanvas) {
 
     try {
       const params = new URLSearchParams({
-        q, format: "json", limit: "1", countrycodes: "np",
+        q, format: "json", limit: "1", countrycodes: "np", "accept-language": "en",
       });
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`);
+      const res = await fetch(`${NOMINATIM}/search?${params}`);
       const list = await res.json();
 
       if (!list.length) {
         setMsg(`Could not find "${q}" in Nepal.`, true);
-        return;
+        return false;
       }
 
-      const place = list[0];
-      if (setLocation(parseFloat(place.lat), parseFloat(place.lon), true)) {
-        setMsg(`Found: ${place.display_name.split(",").slice(0, 2).join(",")}`);
-      }
+      const p = list[0];
+      applyCoords(parseFloat(p.lat), parseFloat(p.lon), { fly: true, lookup: false });
+      placeDirty = false;
+      setMsg(`Found: ${p.display_name.split(",").slice(0, 2).join(",")}`);
+      return true;
     } catch (error) {
       console.error(error);
-      setMsg("Search failed. Click the map instead.", true);
+      setMsg("Search failed. Try again or click the map.", true);
+      return false;
     } finally {
       searchBtn.disabled = false;
     }
   }
 
   searchBtn.addEventListener("click", searchPlace);
+
+  placeEl.addEventListener("input", () => {
+    placeDirty = true;
+  });
+
   placeEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // don't submit the form, just search
+      e.preventDefault(); // search, don't submit the form
       searchPlace();
     }
+  });
+
+  // 3) type coordinates (applies after you stop typing for a moment)
+  function applyTypedCoords() {
+    const lat = parseCoord(latEl.value);
+    const lon = parseCoord(lonEl.value);
+
+    if (lat === null || lon === null) {
+      if (latEl.value.trim() || lonEl.value.trim()) {
+        setMsg("Enter both latitude and longitude as numbers.");
+      }
+      return;
+    }
+
+    applyCoords(lat, lon, { fly: true, write: false });
+  }
+
+  function onCoordInput() {
+    placeDirty = false; // the numbers are now the source of truth
+    clearTimeout(coordTimer);
+    coordTimer = setTimeout(applyTypedCoords, 800);
+  }
+
+  [latEl, lonEl].forEach((el) => {
+    el.addEventListener("input", onCoordInput);
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        clearTimeout(coordTimer);
+        applyTypedCoords();
+      }
+    });
   });
 
   /*---------- Showing the result ----------*/
@@ -416,6 +543,37 @@ if (hcrCanvas) {
     return row;
   }
 
+  // Colored pin + dashed box showing the area the model looked at
+  function drawRisk(data, level) {
+    const { lat, lon } = current;
+
+    riskLayer.clearLayers();
+    const box = L.rectangle([[lat - 1, lon - 1], [lat + 1, lon + 1]], {
+      color: level.color,
+      weight: 2,
+      dashArray: "6 6",
+      fillColor: level.color,
+      fillOpacity: 0.12,
+      interactive: false,
+    }).addTo(riskLayer);
+
+    const pin = L.divIcon({
+      className: "",
+      html: `<div class="eq-pin eq-pin--${data.level}">${data.risk_score}</div>`,
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+    });
+    marker.setIcon(pin);
+
+    const popup = document.createElement("div");
+    const strong = document.createElement("strong");
+    strong.textContent = `Risk ${data.risk_score}/100`;
+    popup.append(strong, document.createTextNode(` · ${data.label}`));
+    marker.bindPopup(popup);
+
+    map.fitBounds(box.getBounds(), { padding: [20, 20] });
+  }
+
   function showResult(data) {
     const level = LEVELS[data.level] || LEVELS.low;
 
@@ -446,7 +604,9 @@ if (hcrCanvas) {
       });
     }, 30);
 
-    // Draw the recent nearby earthquakes on the map
+    drawRisk(data, level);
+
+    // Recent nearby earthquakes
     quakeLayer.clearLayers();
     (data.recent || []).forEach((q) => {
       const popup = document.createElement("div");
@@ -464,48 +624,79 @@ if (hcrCanvas) {
         .bindPopup(popup)
         .addTo(quakeLayer);
     });
+
+    // On phones the map is below the form, so bring it into view
+    if (window.innerWidth < 768) {
+      mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   }
 
   /*---------- Predict ----------*/
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    if (!latEl.value || !lonEl.value) {
-      setStatus("Pick a location first: search a place or click the map.", true);
-      return;
-    }
-
+    clearTimeout(coordTimer);
     predictBtn.disabled = true;
-    setStatus("Fetching live USGS data and running the model...");
-
-    const slowTimer = setTimeout(
-      () => setStatus("Server is waking up (free hosting). First request can take ~30s..."),
-      4000
-    );
 
     try {
-      const response = await fetch(PREDICT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          latitude: parseFloat(latEl.value),
-          longitude: parseFloat(lonEl.value),
-        }),
-      });
-
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok || data.error) {
-        throw new Error(data.error || `Server error (${response.status})`);
+      // A place name was typed but not searched yet: search it first
+      if (placeDirty && placeEl.value.trim()) {
+        setStatus("Looking up the place...");
+        const found = await searchPlace();
+        if (!found) {
+          setStatus("Could not find that place. Check the spelling or click the map.", true);
+          return;
+        }
       }
 
-      showResult(data);
+      // Coordinates typed but not applied yet
+      const lat = parseCoord(latEl.value);
+      const lon = parseCoord(lonEl.value);
+      if (lat !== null && lon !== null && (!current || current.lat !== lat || current.lon !== lon)) {
+        if (!applyCoords(lat, lon, { fly: true, write: false })) {
+          setStatus("Those coordinates are outside Nepal.", true);
+          return;
+        }
+      }
+
+      if (!current) {
+        setStatus("Enter a place name or coordinates first.", true);
+        return;
+      }
+
+      await pendingGeo; // wait for the "is this Nepal?" check
+      if (!current.inNepal) {
+        setStatus("That point is outside Nepal. Pick a place inside the country.", true);
+        return;
+      }
+
+      setStatus("Fetching live USGS data and running the model...");
+      const slowTimer = setTimeout(
+        () => setStatus("Server is waking up (free hosting). First request can take ~30s..."),
+        4000
+      );
+
+      try {
+        const response = await fetch(PREDICT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ latitude: current.lat, longitude: current.lon }),
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || data.error) {
+          throw new Error(data.error || `Server error (${response.status})`);
+        }
+
+        showResult(data);
+      } finally {
+        clearTimeout(slowTimer);
+      }
     } catch (error) {
       console.error(error);
       const offline = error instanceof TypeError;
       setStatus(offline ? "Could not reach the model server." : error.message, true);
     } finally {
-      clearTimeout(slowTimer);
       predictBtn.disabled = false;
     }
   });
@@ -514,16 +705,146 @@ if (hcrCanvas) {
   form.addEventListener("reset", () => {
     // wait one tick so the browser clears the inputs first
     setTimeout(() => {
+      geoToken++;
+      current = null;
+      placeDirty = false;
       if (marker) {
         map.removeLayer(marker);
         marker = null;
       }
-      setMsg("Type a place and search, or click the map.");
+      setMsg(DEFAULT_MSG);
       resetResult();
-      map.setView([28.39, 84.12], 7);
+      map.setView(CENTER, 7);
     }, 0);
   });
 
+  /*---------- LIVE ALERTS (USGS) ----------*/
+  function timeAgo(ms) {
+    const mins = Math.round((Date.now() - ms) / 60000);
+    if (mins < 1) return "just now";
+    if (mins < 60) return `${mins} min ago`;
+    const hours = Math.round(mins / 60);
+    if (hours < 24) return `${hours} h ago`;
+    return `${Math.round(hours / 24)} d ago`;
+  }
+
+  const magClass = (m) => (m >= 5 ? "eq-high" : m >= 4 ? "eq-moderate" : "eq-low");
+
+  function showAlertOnMap(q) {
+    alertLayer.clearLayers();
+
+    const popup = document.createElement("div");
+    const strong = document.createElement("strong");
+    strong.textContent = `M${q.mag.toFixed(1)}`;
+    popup.append(strong, document.createTextNode(` ${q.place} · ${timeAgo(q.time)}`));
+
+    const circle = L.circleMarker([q.lat, q.lon], {
+      radius: Math.max(8, q.mag * 3),
+      color: "#f87171",
+      fillColor: "#f87171",
+      fillOpacity: 0.35,
+      weight: 2,
+    })
+      .bindPopup(popup)
+      .addTo(alertLayer);
+
+    map.flyTo([q.lat, q.lon], Math.max(map.getZoom(), 8));
+    circle.openPopup();
+    mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function renderAlerts(features) {
+    const quakes = features
+      .filter((f) => f.properties.mag != null)
+      .map((f) => ({
+        mag: Number(f.properties.mag),
+        place: f.properties.place || "Unknown location",
+        time: f.properties.time,
+        lon: f.geometry.coordinates[0],
+        lat: f.geometry.coordinates[1],
+        depth: f.geometry.coordinates[2],
+      }));
+
+    // Banner: any M4.5+ in the last 24 hours?
+    const strong = quakes.find((q) => q.mag >= 4.5 && Date.now() - q.time < 864e5);
+    bannerEl.hidden = false;
+    if (strong) {
+      bannerEl.className = "eq-banner is-alert";
+      bannerEl.textContent = `Alert: M${strong.mag.toFixed(1)} earthquake, ${strong.place}, ${timeAgo(strong.time)}.`;
+    } else {
+      bannerEl.className = "eq-banner is-calm";
+      bannerEl.textContent = "No M4.5+ earthquakes in the Nepal region in the last 24 hours.";
+    }
+
+    alertsListEl.replaceChildren();
+
+    if (!quakes.length) {
+      const li = document.createElement("li");
+      li.className = "hcr-hint";
+      li.textContent = "No earthquakes of magnitude 2.5+ in the last 7 days.";
+      alertsListEl.appendChild(li);
+      return;
+    }
+
+    quakes.forEach((q) => {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "eq-alert";
+
+      const mag = document.createElement("span");
+      mag.className = `eq-alert__mag ${magClass(q.mag)}`;
+      mag.textContent = q.mag.toFixed(1);
+
+      const body = document.createElement("div");
+      const place = document.createElement("span");
+      place.className = "eq-alert__place";
+      place.textContent = q.place;
+      const meta = document.createElement("span");
+      meta.className = "eq-alert__meta";
+      meta.textContent = `${timeAgo(q.time)} · depth ${Math.round(q.depth)} km`;
+      body.append(place, meta);
+
+      btn.append(mag, body);
+      btn.addEventListener("click", () => showAlertOnMap(q));
+      li.appendChild(btn);
+      alertsListEl.appendChild(li);
+    });
+  }
+
+  async function loadAlerts() {
+    const params = new URLSearchParams({
+      format: "geojson",
+      minlatitude: NEPAL.minLat,
+      maxlatitude: NEPAL.maxLat,
+      minlongitude: NEPAL.minLon,
+      maxlongitude: NEPAL.maxLon,
+      minmagnitude: "2.5",
+      orderby: "time",
+      limit: "15",
+      starttime: new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 19),
+    });
+
+    try {
+      const res = await fetch(`${USGS_URL}?${params}`);
+      if (!res.ok) throw new Error(`USGS responded ${res.status}`);
+      const json = await res.json();
+      renderAlerts(json.features || []);
+      alertsTimeEl.textContent =
+        "Updated " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    } catch (error) {
+      console.error(error);
+      alertsTimeEl.textContent = "Could not load live data";
+    }
+  }
+
+  loadAlerts();
+  setInterval(() => {
+    if (!document.hidden) loadAlerts(); // don't poll while the tab is hidden
+  }, 60000);
+
+  /*---------- Start ----------*/
+  setMsg(DEFAULT_MSG);
   resetResult();
 })();
 
