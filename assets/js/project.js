@@ -269,6 +269,8 @@ if (hcrCanvas) {
   const alertsListEl = document.getElementById("eq-alerts-list");
   const alertsTimeEl = document.getElementById("eq-alerts-time");
 
+  const isDark = () => !document.body.classList.contains("light-theme");
+
   const map = L.map(mapEl, {
     center: CENTER,
     zoom: 7,
@@ -277,10 +279,20 @@ if (hcrCanvas) {
     maxBoundsViscosity: 0.8,
   });
 
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  const TILES = {
+    dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    light: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+  };
+  const tiles = L.tileLayer(isDark() ? TILES.dark : TILES.light, {
     maxZoom: 19,
-    attribution: "&copy; OpenStreetMap contributors",
+    subdomains: "abcd",
+    attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
   }).addTo(map);
+
+  // swap map style when the theme button is clicked
+  document.getElementById("theme-button").addEventListener("click", () => {
+    setTimeout(() => tiles.setUrl(isDark() ? TILES.dark : TILES.light), 0);
+  });
 
 
   const defaultIcon = new L.Icon.Default();
@@ -659,9 +671,8 @@ if (hcrCanvas) {
     });
 
     // On phones the map is below the form, so bring it into view
-    if (window.innerWidth < 768) {
-      mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+        // bring the result into view
+    document.querySelector(".eq-output").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   /*---------- Predict ----------*/

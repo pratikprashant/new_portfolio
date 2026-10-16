@@ -3060,14 +3060,6 @@ body.light-theme {
   }
 }
 
-.eq-map .leaflet-tile-pane {
-  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9);
-}
-
-.light-theme .eq-map .leaflet-tile-pane {
-  filter: none;
-}
-
 /* ===== Earthquake: extra styles ===== */
 .eq-alerts { grid-column: 1 / -1; }
 
@@ -3151,3 +3143,8 @@ body.light-theme {
   .eq-stats { grid-template-columns: 1fr; }
   .eq-output .hcr-bar { grid-template-columns: 7rem 1fr 3rem; }
 }
+
+@media screen and (min-width: 768px) {
+  .eq-demo { align-items: stretch; }
+}
+.eq-map-wrap { min-width: 0; }
