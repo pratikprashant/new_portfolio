@@ -269,13 +269,6 @@ if (hcrCanvas) {
   const alertsListEl = document.getElementById("eq-alerts-list");
   const alertsTimeEl = document.getElementById("eq-alerts-time");
 
-  /*---------- Map ----------*/
-  const isDark = () => !document.body.classList.contains("light-theme");
-L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution: "&copy; OpenStreetMap contributors",
-}).addTo(map);
-
   const map = L.map(mapEl, {
     center: CENTER,
     zoom: 7,
@@ -283,6 +276,11 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxBounds: [[25.5, 79.5], [31, 89]],
     maxBoundsViscosity: 0.8,
   });
+
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap contributors",
+  }).addTo(map);
 
 
   const defaultIcon = new L.Icon.Default();
@@ -504,12 +502,19 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     }
   });
 
+    placeEl.addEventListener("input", () => {
+    placeDirty = true;
+  });
+
   // 3) type coordinates (applies after you stop typing for a moment)
   function applyTypedCoords() {
     const lat = parseCoord(latEl.value);
     const lon = parseCoord(lonEl.value);
 
-    if (lat === null || lon === null) {
+          if (
+        lat !== null && lon !== null &&
+        (!current || Math.abs(current.lat - lat) > 0.0001 || Math.abs(current.lon - lon) > 0.0001)
+      ) {
       if (latEl.value.trim() || lonEl.value.trim()) {
         setMsg("Enter both latitude and longitude as numbers.");
       }
