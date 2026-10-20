@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--=============== FAVICON ===============-->
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#a789d4">
+
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <title>NEPSE Stock Analysis | Prashant's Portfolio</title>
+</head>
+
+<body>
+    <!--=============== HEADER ===============-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="../index.html" class="nav__logo">Prashant</a>
+
+            <a href="../index.html#work" class="project__back">
+                <i class='bx bx-left-arrow-alt'></i> Back to projects
+            </a>
+
+            <i class='bx bx-moon change__theme' id="theme-button"></i>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!--=============== INTRO ===============-->
+        <section class="project section">
+            <div class="project__container container">
+                <span class="section__subtitle">AI / ML Project</span>
+                <h1 class="project__title">NEPSE Stock Analysis</h1>
+
+                <span class="wip-badge"><i class='bx bx-loader-circle'></i> Work in progress</span>
+
+                <p class="project__intro">
+                    A project on the Nepal Stock Exchange (NEPSE): collecting market data,
+                    studying how prices behave, and building a machine learning model on top of it.
+                    The live demo isn't ready yet, so this page shows how far it has come.
+                </p>
+
+                <ul class="project__tags">
+                    <li>Python</li>
+                    <li>Pandas</li>
+                    <li>Time Series</li>
+                    <li>Scikit-learn</li>
+                    <li>Flask</li>
+                </ul>
+            </div>
+        </section>
+
+        <!--=============== PROGRESS BOARD ===============-->
+        <section class="project-demo">
+            <div class="container">
+                <div class="project__demo" id="demo">
+
+                    <div class="wip">
+
+                        <!-- LEFT: overall progress + roadmap -->
+                        <div class="wip-main">
+                            <div class="wip-progress">
+                                <div class="wip-progress__top">
+                                    <span class="hcr-label"><i class='bx bx-trending-up'></i> overall progress</span>
+                                    <strong class="wip-progress__pct">35%</strong>
+                                </div>
+                                <div class="wip-progress__track">
+                                    <!-- change the width to your real progress -->
+                                    <div class="wip-progress__fill" style="width: 35%"></div>
+                                </div>
+                                <span class="hcr-hint">Last updated: [Month Year]</span>
+                            </div>
+
+                            <ol class="wip-steps">
+                                <!-- status classes: is-done, is-active, is-planned -->
+                                <li class="wip-step is-done">
+                                    <span class="wip-step__icon"><i class='bx bx-check'></i></span>
+                                    <div>
+                                        <h3 class="wip-step__title">Define the problem</h3>
+                                        <p class="wip-step__text">Decide what the project should answer and which NEPSE data it needs.</p>
+                                    </div>
+                                    <span class="wip-step__status">Done</span>
+                                </li>
+
+                                <li class="wip-step is-active">
+                                    <span class="wip-step__icon"><i class='bx bx-data'></i></span>
+                                    <div>
+                                        <h3 class="wip-step__title">Collect and clean data</h3>
+                                        <p class="wip-step__text">Gathering historical prices and volumes, then fixing gaps and errors.</p>
+                                    </div>
+                                    <span class="wip-step__status">In progress</span>
+                                </li>
+
+                                <li class="wip-step is-planned">
+                                    <span class="wip-step__icon"><i class='bx bx-search-alt'></i></span>
+                                    <div>
+                                        <h3 class="wip-step__title">Explore the data</h3>
+                                        <p class="wip-step__text">Charts, trends and patterns, so the model is built on understanding.</p>
+                                    </div>
+                                    <span class="wip-step__status">Planned</span>
+                                </li>
+
+                                <li class="wip-step is-planned">
+                                    <span class="wip-step__icon"><i class='bx bx-brain'></i></span>
+                                    <div>
+                                        <h3 class="wip-step__title">Build and test the model</h3>
+                                        <p class="wip-step__text">Train models, compare them honestly, and keep the one that holds up on unseen data.</p>
+                                    </div>
+                                    <span class="wip-step__status">Planned</span>
+                                </li>
+
+                                <li class="wip-step is-planned">
+                                    <span class="wip-step__icon"><i class='bx bx-rocket'></i></span>
+                                    <div>
+                                        <h3 class="wip-step__title">Launch the live demo</h3>
+                                        <p class="wip-step__text">Connect the model to this page so visitors can try it.</p>
+                                    </div>
+                                    <span class="wip-step__status">Planned</span>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <!-- RIGHT: locked demo preview -->
+                        <div class="hcr-output wip-preview">
+                            <div class="terminal__dots">
+                                <span></span><span></span><span></span>
+                            </div>
+
+                            <p class="hcr-cmd"><span>prashant@linux:~$</span> nepse.analyze(symbol)</p>
+
+                            <div class="hcr-output__result">
+                                <div class="hcr-output__char wip-preview__icon">
+                                    <i class='bx bx-lock-alt'></i>
+                                </div>
+
+                                <div class="hcr-output__meta">
+                                    <span class="hcr-output__label">Demo status</span>
+                                    <strong class="hcr-output__conf">Coming soon</strong>
+                                    <p class="hcr-output__status">Not available yet. Check back after the next update.</p>
+                                </div>
+                            </div>
+
+                            <div class="wip-fake">
+                                <input type="text" placeholder="Stock symbol (e.g. NABIL)" disabled aria-label="Stock symbol, available soon">
+                                <button type="button" class="button" disabled>Analyze</button>
+                            </div>
+
+                            <div class="hcr-output__top">
+                                <span class="hcr-output__label">What the demo will show</span>
+                                <ul class="wip-plan">
+                                    <li><i class='bx bx-line-chart'></i> Price history chart for a chosen stock</li>
+                                    <li><i class='bx bx-bar-chart-alt-2'></i> The model's estimate and how reliable it has been</li>
+                                    <li><i class='bx bx-info-circle'></i> Plain-language notes on the model's limits</li>
+                                </ul>
+                            </div>
+
+                            <p class="eq-disclaimer">
+                                Educational project. Nothing here is financial advice, and stock prices cannot be predicted with certainty.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!--=============== INFO CARDS ===============-->
+        <section class="project-info section">
+            <div class="project__info container">
+
+                <div class="project__card">
+                    <i class='bx bx-target-lock project__card-icon'></i>
+                    <h3 class="project__card-title">Goal</h3>
+                    <p class="project__card-text">[One sentence: what do you want the model to tell users about NEPSE stocks?]</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-data project__card-icon'></i>
+                    <h3 class="project__card-title">Data</h3>
+                    <p class="project__card-text">[Where the data comes from, which years, and how many companies.]</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bx-brain project__card-icon'></i>
+                    <h3 class="project__card-title">Approach</h3>
+                    <p class="project__card-text">[Models you plan to try. Keep it to what you really intend to do.]</p>
+                </div>
+
+                <div class="project__card">
+                    <i class='bx bxl-github project__card-icon'></i>
+                    <h3 class="project__card-title">Follow Along</h3>
+                    <a href="https://github.com/pratikprashant" target="_blank" class="project__card-link">
+                        Watch on GitHub <i class='bx bx-right-arrow'></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="project__footer">
+        <span class="footer__copy">&#169; 2026 Prashant. All rights reserved.</span>
+    </footer>
+
+    <script src="../assets/js/project.js"></script>
+</body>
+
+</html>

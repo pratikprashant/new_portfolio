@@ -42,7 +42,7 @@ if (hcrCanvas) {
   const HCR_URL = `${API_BASE}/api/hcr_predict`;
 
   // Wake the free Render server while the visitor is still drawing
-  if (!IS_LOCAL) fetch(API_BASE, { mode: "no-cors" }).catch(() => {});
+  if (!IS_LOCAL) fetch(API_BASE, { mode: "no-cors" }).catch(() => { });
 
   const ctx = hcrCanvas.getContext("2d");
   const clearBtn = document.getElementById("hcr-clear");
@@ -226,7 +226,7 @@ if (hcrCanvas) {
   const NOMINATIM = "https://nominatim.openstreetmap.org";
 
   // Start loading the model as soon as the page opens
-  fetch(`${API_BASE}/api/earthquake_warmup`).catch(() => {});
+  fetch(`${API_BASE}/api/earthquake_warmup`).catch(() => { });
 
   const NEPAL = { minLat: 26.0, maxLat: 30.5, minLon: 80.0, maxLon: 88.5 };
   const CENTER = [28.39, 84.12];
@@ -428,7 +428,7 @@ if (hcrCanvas) {
   });
 
   // 2) type a place name
-    // Common places: found instantly, and they work even if the online lookup is blocked
+  // Common places: found instantly, and they work even if the online lookup is blocked
   const PLACES = {
     "kathmandu": [27.7172, 85.3240],
     "pokhara": [28.2096, 83.9856],
@@ -514,7 +514,7 @@ if (hcrCanvas) {
     }
   });
 
-    placeEl.addEventListener("input", () => {
+  placeEl.addEventListener("input", () => {
     placeDirty = true;
   });
 
@@ -523,10 +523,10 @@ if (hcrCanvas) {
     const lat = parseCoord(latEl.value);
     const lon = parseCoord(lonEl.value);
 
-          if (
-        lat !== null && lon !== null &&
-        (!current || Math.abs(current.lat - lat) > 0.0001 || Math.abs(current.lon - lon) > 0.0001)
-      ) {
+    if (
+      lat !== null && lon !== null &&
+      (!current || Math.abs(current.lat - lat) > 0.0001 || Math.abs(current.lon - lon) > 0.0001)
+    ) {
       if (latEl.value.trim() || lonEl.value.trim()) {
         setMsg("Enter both latitude and longitude as numbers.");
       }
@@ -671,7 +671,7 @@ if (hcrCanvas) {
     });
 
     // On phones the map is below the form, so bring it into view
-        // bring the result into view
+    // bring the result into view
     document.querySelector(".eq-output").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -892,10 +892,15 @@ if (hcrCanvas) {
   resetResult();
 })();
 
+
 /*=============== RAG ASSISTANT DEMO ===============*/
 (() => {
   // ---- CONFIG: change to your backend ----
-  const API_URL = "http://127.0.0.1:5000/ask";
+    const IS_LOCAL = ["", "localhost", "127.0.0.1"].includes(location.hostname);
+  const API_BASE = IS_LOCAL
+    ? "http://127.0.0.1:5000"
+    : "https://prashant-ml-api.onrender.com";
+  const API_URL = `${API_BASE}/api/rag_error`;
 
   /*
     Request:  POST { "question": "..." }
@@ -910,6 +915,8 @@ if (hcrCanvas) {
 
   const form = document.getElementById("rag-form");
   if (!form) return;
+
+    fetch(`${API_BASE}/api/rag_error_warmup`).catch(() => { });
 
   const inputEl = document.getElementById("rag-input");
   const sendBtn = document.getElementById("rag-send");
@@ -1041,26 +1048,47 @@ if (hcrCanvas) {
     setStatus("Working on it...");
     startSteps();
 
+        const slowTimer = setTimeout(
+      () => setStatus("Server is waking up (free hosting). First request can take ~30s..."),
+      4000
+    );
+
     try {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: q }),
       });
-      if (!res.ok) throw new Error(`Server responded ${res.status}`);
 
-      const { answer, sources } = parseResponse(await res.json());
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.error) {
+        throw new Error(data.error || `Server error (${res.status})`);
+      }
+
+      const { answer, sources } = parseResponse(data);
       typing.remove();
       addMessage(answer || "I couldn't find an answer to that.", "bot");
       stopSteps(true);
       renderSources(sources);
+
+      if (data.mode === "retrieval-only") {
+        setStatus("AI writer unavailable, showing the best matching record.");
+      }
     } catch (err) {
       console.error(err);
       typing.remove();
-      addMessage("I couldn't reach the assistant. Is the server running?", "bot", true);
+      const offline = err instanceof TypeError;
+      addMessage(
+        offline
+          ? "I couldn't reach the assistant. The server may be waking up, so try again in a moment."
+          : err.message,
+        "bot",
+        true
+      );
       stopSteps(false);
       setStatus("Request failed.", true);
     } finally {
+      clearTimeout(slowTimer);
       busy = false;
       sendBtn.disabled = false;
       inputEl.focus();
@@ -1089,26 +1117,16 @@ if (hcrCanvas) {
 
 /*=============== PHISHING URL DETECTION DEMO ===============*/
 (() => {
-  // ---- CONFIG: change to your backend ----
-  const API_URL = "http://127.0.0.1:5000/check-url";
-
-  /*
-    Request:  POST { "url": "https://..." }
-    Expected response (adjust parseResponse() if yours differs):
-    {
-      "verdict": "phishing",              // "phishing" | "legitimate"
-      "phishing_probability": 0.93,       // 0-1  (preferred)
-      "domain": {
-        "resolves": true,                 // DNS lookup succeeded
-        "ips": ["93.184.216.34"],         // optional
-        "age_days": 412                   // optional, from RDAP/WHOIS (null if unknown)
-      }
-    }
-    The backend should only do DNS / RDAP lookups. It must NOT fetch the page itself.
-  */
+  const IS_LOCAL = ["", "localhost", "127.0.0.1"].includes(location.hostname);
+  const API_BASE = IS_LOCAL
+    ? "http://127.0.0.1:5000"
+    : "https://prashant-ml-api.onrender.com";
+  const API_URL = `${API_BASE}/api/phishing`;
 
   const form = document.getElementById("ph-form");
   if (!form) return;
+
+  fetch(`${API_BASE}/api/phishing_warmup`).catch(() => { });
 
   const urlEl = document.getElementById("ph-url");
   const analyzeBtn = document.getElementById("ph-analyze");
@@ -1122,12 +1140,14 @@ if (hcrCanvas) {
   const pctEl = document.getElementById("ph-meter-pct");
   const formatEl = document.getElementById("ph-format");
   const domainEl = document.getElementById("ph-domain");
+  const formatLabelEl = document.getElementById("ph-format-label");
 
   const STATE_CLASSES = ["ph-ok", "ph-warn", "ph-bad"];
-  const ICONS = {
+    const ICONS = {
     ok: "bx-check-circle",
     warn: "bx-error",
     bad: "bx-x-circle",
+    info: "bx-info-circle",
   };
 
   const SHORTENERS = [
@@ -1140,12 +1160,12 @@ if (hcrCanvas) {
   ];
 
   /*=============== FORMAT ANALYSIS (runs in the browser) ===============*/
-  const analyzeFormat = (raw) => {
+    const analyzeFormat = (raw) => {
     const checks = [];
     const add = (status, label, detail) => checks.push({ status, label, detail });
 
     if (/\s/.test(raw)) {
-      add("bad", "Valid URL structure", "Contains spaces, which a real link never does.");
+      add("bad", "Link is not well-formed", "It contains spaces, which a real link never does.");
       return { valid: false, checks };
     }
 
@@ -1154,12 +1174,12 @@ if (hcrCanvas) {
     try {
       parsed = new URL(hasScheme ? raw : "http://" + raw);
     } catch {
-      add("bad", "Valid URL structure", "This can't be parsed as a URL.");
+      add("bad", "Link is not well-formed", "This can't be read as a web address.");
       return { valid: false, checks };
     }
 
     if (!["http:", "https:"].includes(parsed.protocol)) {
-      add("bad", "Valid URL structure", `Unusual scheme "${parsed.protocol}" (expected http or https).`);
+      add("bad", "Link is not well-formed", `It starts with "${parsed.protocol}" instead of http or https.`);
       return { valid: false, checks };
     }
 
@@ -1168,62 +1188,80 @@ if (hcrCanvas) {
     const labels = host.split(".");
 
     if (!isIp && labels.length < 2) {
-      add("bad", "Valid URL structure", `"${host}" is not a full domain name.`);
+      add("bad", "Link is not well-formed", `"${host}" is not a full domain name.`);
       return { valid: false, checks };
     }
 
-    add("ok", "Valid URL structure", hasScheme ? "Parsed correctly." : "Parsed correctly (scheme was missing, assumed http).");
+    add(
+      "ok",
+      "Link is well-formed",
+      hasScheme
+        ? "The address can be read correctly."
+        : "You didn't type http:// or https://, so we assumed http. That is not a warning sign."
+    );
 
-    // Scheme
-    if (!hasScheme) add("warn", "Scheme", "No http/https given.");
-    else if (parsed.protocol === "https:") add("ok", "Uses HTTPS", "Encrypted, though phishing sites use HTTPS too.");
-    else add("warn", "Uses HTTPS", "Plain http: traffic is not encrypted.");
+    // Protocol (only judged when the visitor typed one)
+    if (hasScheme) {
+      if (parsed.protocol === "https:") {
+        add("ok", "Uses HTTPS", "The connection is encrypted. Phishing sites can use HTTPS too, so this alone proves little.");
+      } else {
+        add("warn", "Uses plain HTTP", "Not encrypted. Real login pages almost always use HTTPS.");
+      }
+    }
 
-    // IP host
-    if (isIp) add("bad", "Domain name", "Host is a raw IP address instead of a domain.");
-    else add("ok", "Domain name", `Host is ${host}`);
+    // IP address instead of a name
+    if (isIp) add("bad", "Uses an IP address", "Real sites use names like example.com, not numbers.");
+    else add("ok", "Normal domain name", `The domain is ${host}.`);
 
-    // @ symbol / userinfo
-    if (raw.includes("@") || parsed.username) add("bad", "@ symbol", "Text before @ can hide the real destination.");
-    else add("ok", "@ symbol", "None.");
+    // @ trick
+    if (raw.includes("@") || parsed.username) {
+      add("bad", "Contains an @ symbol", "Browsers ignore everything before @, so it can hide the real destination.");
+    } else {
+      add("ok", "No @ trick", "Nothing in the link hides the real destination.");
+    }
 
     // Length
     const len = raw.length;
-    if (len > 100) add("bad", "URL length", `${len} characters (very long).`);
-    else if (len > 75) add("warn", "URL length", `${len} characters (long).`);
-    else add("ok", "URL length", `${len} characters.`);
+    if (len > 100) add("bad", "Very long link", `${len} characters. Long links can bury the real domain.`);
+    else if (len > 75) add("warn", "Long link", `${len} characters. Check the domain carefully.`);
+    else add("ok", "Reasonable length", `${len} characters.`);
 
     // Subdomains
     if (!isIp) {
       const subs = Math.max(0, labels.length - 2);
-      if (subs >= 3) add("bad", "Subdomains", `${subs} subdomain levels, often used to fake a brand.`);
-      else if (subs === 2) add("warn", "Subdomains", "2 subdomain levels.");
-      else add("ok", "Subdomains", `${subs} subdomain level${subs === 1 ? "" : "s"}.`);
+      if (subs >= 3) add("bad", "Many subdomains", `${subs} levels. Attackers stack them to fake a brand, like paypal.com.evil.net.`);
+      else if (subs === 2) add("warn", "Two subdomains", "Check that the last two parts of the domain are the brand you expect.");
+      else if (subs === 1) add("ok", "One subdomain", "For example mail.example.com. This is normal.");
+      else add("ok", "No extra subdomains", "Just the main domain.");
     }
 
-    // Hyphens in host
+    // Hyphens
     const hyphens = (host.match(/-/g) || []).length;
-    if (hyphens >= 3) add("bad", "Hyphens in domain", `${hyphens} hyphens.`);
-    else if (hyphens === 2) add("warn", "Hyphens in domain", "2 hyphens.");
-    else add("ok", "Hyphens in domain", hyphens ? "1 hyphen." : "None.");
+    if (hyphens >= 3) add("bad", "Many hyphens in the domain", `${hyphens} hyphens. Fake domains often chain words like secure-login-update.`);
+    else if (hyphens === 2) add("warn", "Two hyphens in the domain", "A mild hint. Real brands rarely need them.");
+    else add("ok", "Few hyphens", hyphens ? "Only one hyphen." : "No hyphens in the domain.");
 
-    // Punycode
-    if (host.includes("xn--")) add("bad", "Punycode", "Contains look-alike (internationalised) characters.");
+    // Look-alike characters
+    if (host.includes("xn--")) {
+      add("bad", "Look-alike characters", "The domain uses special characters that can imitate real letters.");
+    }
 
-    // Shortener
+    // Shorteners
     if (SHORTENERS.some((s) => host === s || host.endsWith("." + s))) {
-      add("warn", "URL shortener", "Hides the final destination.");
+      add("warn", "URL shortener", "The real destination is hidden behind this short link.");
     }
 
     // Keywords
     const hay = (host + parsed.pathname + parsed.search).toLowerCase();
     const found = KEYWORDS.filter((k) => hay.includes(k));
-    if (found.length >= 2) add("bad", "Suspicious keywords", found.join(", "));
-    else if (found.length === 1) add("warn", "Suspicious keywords", found[0]);
-    else add("ok", "Suspicious keywords", "None.");
+    if (found.length >= 2) add("bad", "Pressure words", `Contains: ${found.join(", ")}. Common in phishing, though real sites use them too.`);
+    else if (found.length === 1) add("warn", "Pressure word", `Contains "${found[0]}". Only a hint, since real sites use it too.`);
+    else add("ok", "No pressure words", "No words like login, verify or secure.");
 
     // Redirect trick
-    if (parsed.pathname.includes("//")) add("warn", "Double slash in path", "Can indicate a redirect trick.");
+    if (parsed.pathname.includes("//")) {
+      add("warn", "Double slash in the path", "Can be a redirect trick.");
+    }
 
     return { valid: true, host, checks };
   };
@@ -1238,7 +1276,8 @@ if (hcrCanvas) {
       listEl.appendChild(li);
       return;
     }
-    checks.forEach(({ status, label, detail }) => {
+        const order = { bad: 0, warn: 1, info: 2, ok: 3 };
+    [...checks].sort((a, b) => order[a.status] - order[b.status]).forEach(({ status, label, detail }) => {
       const li = document.createElement("li");
       li.className = "ph-check";
 
@@ -1301,29 +1340,47 @@ if (hcrCanvas) {
     return { p, domain: data.domain ?? null };
   };
 
-  const domainChecks = (domain) => {
+    const domainChecks = (domain) => {
     if (!domain) return [];
     const checks = [];
 
     if (domain.resolves === true) {
-      const ips = Array.isArray(domain.ips) && domain.ips.length ? domain.ips.slice(0, 2).join(", ") : "";
-      checks.push({ status: "ok", label: "Domain is live", detail: ips ? `Resolves to ${ips}` : "DNS lookup succeeded." });
+      // show a short IPv4 address as the example, not the long IPv6 one
+      const ips = Array.isArray(domain.ips)
+        ? [...domain.ips].sort((a, b) => a.includes(":") - b.includes(":"))
+        : [];
+      const example = ips[0] ? ` (for example ${ips[0]})` : "";
+      checks.push({
+        status: "ok",
+        label: "Domain name exists",
+        detail: `This name points to a real server${example}. It proves the name is set up, not that the site is trustworthy.`,
+      });
     } else if (domain.resolves === false) {
       checks.push({
         status: "warn",
-        label: "Domain not found",
-        detail: "No DNS record, so this domain isn't serving anything right now.",
+        label: "Domain name not found",
+        detail: "This name doesn't point to any server. It may be a typo, or a throwaway name that was already taken down.",
+      });
+    } else {
+      checks.push({
+        status: "info",
+        label: "Domain lookup unavailable",
+        detail: "We couldn't check this name right now.",
       });
     }
 
     if (typeof domain.age_days === "number") {
       const d = domain.age_days;
       const text = d >= 365 ? `${(d / 365).toFixed(1)} years old` : `${d} day${d === 1 ? "" : "s"} old`;
-      if (d < 30) checks.push({ status: "bad", label: "Domain age", detail: `${text}. Very new domains are a common phishing sign.` });
-      else if (d < 180) checks.push({ status: "warn", label: "Domain age", detail: `${text}.` });
-      else checks.push({ status: "ok", label: "Domain age", detail: `${text}.` });
-    } else if (domain.resolves) {
-      checks.push({ status: "warn", label: "Domain age", detail: "Registration date unavailable." });
+      if (d < 30) checks.push({ status: "bad", label: "Very new domain", detail: `${text}. Very new domains are a common phishing sign.` });
+      else if (d < 180) checks.push({ status: "warn", label: "Fairly new domain", detail: `${text}. Established sites are usually older.` });
+      else checks.push({ status: "ok", label: "Established domain", detail: `${text}. Phishing sites are often only days or weeks old.` });
+    } else if (domain.resolves !== false) {
+      checks.push({
+        status: "info",
+        label: "Domain age unknown",
+        detail: "Some domain types (like .np) don't publish a registration date, so this is not a warning.",
+      });
     }
 
     return checks;
@@ -1342,6 +1399,8 @@ if (hcrCanvas) {
     // Step 1: instant format check
     const format = analyzeFormat(raw);
     renderChecks(formatEl, format.checks);
+        const passed = format.checks.filter((c) => c.status === "ok").length;
+    formatLabelEl.textContent = `URL format checks · ${passed} of ${format.checks.length} passed`;
     domainEl.innerHTML = "";
 
     if (!format.valid) {
@@ -1351,9 +1410,15 @@ if (hcrCanvas) {
     }
 
     // Step 2: model + domain checks on the backend
+    // Step 2: model + domain checks on the backend
     analyzeBtn.disabled = true;
     setState(null, "bx-loader-alt bx-spin", "Analyzing...", null);
     setStatus("Running the model and domain checks...");
+
+    const slowTimer = setTimeout(
+      () => setStatus("Server is waking up (free hosting). First request can take ~30s..."),
+      4000
+    );
 
     try {
       const res = await fetch(API_URL, {
@@ -1361,29 +1426,63 @@ if (hcrCanvas) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: raw }),
       });
-      if (!res.ok) throw new Error(`Server responded ${res.status}`);
 
-      const { p, domain } = parseResponse(await res.json());
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.error) {
+        throw new Error(data.error || `Server error (${res.status})`);
+      }
+
+      const { p, domain } = parseResponse(data);
       const pct = Math.round(p * 1000) / 10;
 
-      if (p >= 0.7) {
+            const dChecks = domainChecks(domain);
+
+      // "Healthy": no failed or warned format checks, the domain exists,
+      // and it has been registered for at least a year
+      const formatClean = format.checks.every((c) => c.status === "ok" || c.status === "info");
+      const domainHealthy =
+        domain && domain.resolves === true &&
+        typeof domain.age_days === "number" && domain.age_days >= 365;
+      const healthy = formatClean && domainHealthy;
+
+      // A very new domain is worth flagging even if the model likes the text
+      const veryNew = domain && typeof domain.age_days === "number" && domain.age_days < 30;
+
+      if (p >= 0.4 && healthy) {
+        setState("ph-warn", "bx-error", "Mixed signals", pct);
+        setStatus(
+          "The model dislikes the link's text, but every format and domain check looks healthy. " +
+          "The model reads only the text, so it can be wrong about well-known sites. Check the address carefully."
+        );
+      } else if (p >= 0.7) {
         setState("ph-bad", "bx-error-circle", "Likely phishing", pct);
         setStatus("Do not enter any personal information on this site.");
-      } else if (p >= 0.4) {
+      } else if (p >= 0.4 || veryNew) {
         setState("ph-warn", "bx-error", "Suspicious", pct);
-        setStatus("Some signs of phishing. Be careful with this link.");
+        setStatus(
+          veryNew && p < 0.4
+            ? "The link's text looks fine, but the domain was registered very recently."
+            : "Some signs of phishing. Be careful with this link."
+        );
       } else {
         setState("ph-ok", "bx-check-shield", "Looks safe", pct);
         setStatus("No strong phishing signs found. No tool is perfect, so stay alert.");
       }
 
-      renderChecks(domainEl, domainChecks(domain));
+      renderChecks(domainEl, dChecks);
     } catch (err) {
       console.error(err);
-      setState(null, "bx-wifi-off", "Model offline", null);
-      setStatus("Couldn't reach the model. Only the format check above is available.", true);
+      const offline = err instanceof TypeError;
+      setState(null, "bx-wifi-off", offline ? "Model offline" : "Error", null);
+      setStatus(
+        offline
+          ? "Couldn't reach the model. Only the format check above is available."
+          : err.message,
+        true
+      );
       renderChecks(domainEl, []);
     } finally {
+      clearTimeout(slowTimer);
       analyzeBtn.disabled = false;
     }
   });
@@ -1391,6 +1490,7 @@ if (hcrCanvas) {
   clearBtn.addEventListener("click", () => {
     urlEl.value = "";
     resetOutput();
+        formatLabelEl.textContent = "URL format checks";
     urlEl.focus();
   });
 

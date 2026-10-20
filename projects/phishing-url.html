@@ -49,12 +49,13 @@
                 </p>
 
                 <ul class="project__tags">
-                    <li>Python</li>
-                    <li>Scikit-learn</li>
-                    <li>Feature Engineering</li>
-                    <li>DNS / RDAP</li>
-                    <li>Flask</li>
-                </ul>
+    <li>Python</li>
+    <li>Scikit-learn</li>
+    <li>Logistic Regression</li>
+    <li>CountVectorizer</li>
+    <li>DNS / RDAP</li>
+    <li>Flask</li>
+</ul>
             </div>
         </section>
 
@@ -91,7 +92,26 @@
                                     <button type="button" data-url="http://secure-login.paypa1-account-verify.example.com/update?id=1">Suspicious</button>
                                     <button type="button" data-url="http://192.168.10.5@bit.ly/confirm-password">Tricky</button>
                                 </div>
-                            </div>
+                            </div><div class="ph-help">
+    <span class="hcr-hint">How to read the result</span>
+    <ul>
+        <li>
+            <i class='bx bx-bar-chart-alt-2'></i>
+            <span><b>Phishing score</b>: how much the link's text resembles known phishing links.
+            Under 40% looks safe, 40 to 70% is suspicious, over 70% is likely phishing.</span>
+        </li>
+        <li>
+            <i class='bx bx-search-alt'></i>
+            <span><b>Format checks</b>: quick tests of the link's shape, done in your browser.</span>
+        </li>
+        <li>
+            <i class='bx bx-world'></i>
+            <span><b>Domain checks</b>: whether the name exists and how old it is.
+            The website itself is never opened.</span>
+        </li>
+    </ul>
+</div>
+
                         </form>
 
                         <!-- RIGHT: results -->
@@ -115,24 +135,29 @@
                             </div>
 
                             <div class="hcr-output__top">
-                                <span class="hcr-output__label">Phishing probability</span>
-                                <div class="ph-meter">
-                                    <div class="ph-meter__track">
-                                        <div class="ph-meter__fill" id="ph-meter-fill"></div>
-                                    </div>
-                                    <span class="ph-meter__pct" id="ph-meter-pct">--</span>
-                                </div>
-                            </div>
+    <span class="hcr-output__label">Phishing score (the model's estimate from the link's text)</span>
+    <div class="ph-meter">
+        <div class="ph-meter__track">
+            <div class="ph-meter__fill" id="ph-meter-fill"></div>
+        </div>
+        <span class="ph-meter__pct" id="ph-meter-pct">--</span>
+    </div>
+    <div class="ph-scale">
+        <span>Looks safe</span><span>Suspicious</span><span>Likely phishing</span>
+    </div>
+</div>
 
                             <div class="hcr-output__top">
-                                <span class="hcr-output__label">URL format checks</span>
-                                <ul class="ph-checks" id="ph-format"></ul>
+<span class="hcr-output__label" id="ph-format-label">URL format checks</span>                                <ul class="ph-checks" id="ph-format"></ul>
                             </div>
 
                             <div class="hcr-output__top">
                                 <span class="hcr-output__label">Domain checks</span>
                                 <ul class="ph-checks" id="ph-domain"></ul>
                             </div>
+                            <p class="hcr-hint">
+    Educational demo, not a security product. A "safe" result never guarantees a link is safe.
+</p>
                         </div>
 
                     </div>
@@ -180,7 +205,6 @@
     </footer>
 
     <script src="../assets/js/project.js"></script>
-    <script src="../assets/js/phishing-detection.js"></script>
 </body>
 
 </html>

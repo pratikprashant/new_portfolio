@@ -19,7 +19,7 @@
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../assets/css/styles.css">
 
-    <title>RAG-Based AI Assistant | Prashant's Portfolio</title>
+    <title>RAG Debugging Assistant | Prashant's Portfolio</title>
 </head>
 
 <body>
@@ -41,21 +41,21 @@
         <section class="project section">
             <div class="project__container container">
                 <span class="section__subtitle">Generative AI Project</span>
-                <h1 class="project__title">RAG-Based AI Assistant</h1>
+                <h1 class="project__title">RAG Debugging Assistant</h1>
 
-                <p class="project__intro">
-                    Ask a question and the assistant retrieves the most relevant passages from its
-                    knowledge base, then generates an answer grounded in them, with sources shown.
-                </p>
+<p class="project__intro">
+    Paste an error from a backend, machine learning or data project. The assistant finds the
+    closest known errors in its knowledge base, then an LLM writes a short fix using only those
+    records. The matched records are shown next to the answer.
+</p>
 
-                <ul class="project__tags">
-                    <li>Python</li>
-                    <li>LLMs</li>
-                    <li>RAG</li>
-                    <li>Embeddings</li>
-                    <li>Vector DB</li>
-                    <li>Flask</li>
-                </ul>
+<ul class="project__tags">
+    <li>Python</li>
+    <li>RAG</li>
+    <li>TF-IDF</li>
+    <li>Groq LLM</li>
+    <li>Flask</li>
+</ul>
             </div>
         </section>
 
@@ -76,15 +76,15 @@
                             </div>
 
                             <div class="rag-chat__messages" id="rag-messages">
-                                <div class="bot-message">Hi! Ask me a question and I'll answer using my knowledge base. Write what it contains here.</div>
+                                <div class="bot-message">Hi! Paste an error message or ask a debugging question. I cover backend API, machine learning and data engineering errors.</div>
                             </div>
 
                             <div class="chatbot__suggestions" id="rag-suggestions">
-                                <!-- Replace with questions your knowledge base can answer -->
-                                <button type="button" data-q="What is this assistant built on?">What is this built on?</button>
-                                <button type="button" data-q="What documents do you know about?">What do you know?</button>
-                                <button type="button" data-q="Give me a quick summary.">Quick summary</button>
-                            </div>
+    <button type="button" data-q="KeyError: 'user_id' not found in request payload">KeyError</button>
+    <button type="button" data-q="ValueError: Input contains NaN, infinity or a value too large for dtype('float64')">NaN error</button>
+    <button type="button" data-q="RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x10) and (20x5)">Shape mismatch</button>
+    <button type="button" data-q="MemoryError: Unable to allocate 12 GiB for an array with shape">MemoryError</button>
+</div>
 
                             <form class="rag-chat__input" id="rag-form" autocomplete="off">
                                 <input type="text" id="rag-input" placeholder="Ask a question..." maxlength="500">
@@ -103,10 +103,10 @@
                             <p class="hcr-cmd"><span>prashant@linux:~$</span> rag.retrieve(query)</p>
 
                             <div class="rag-steps" id="rag-steps">
-                                <span class="rag-step" data-step="embed"><i class='bx bx-vector'></i> Embed</span>
-                                <span class="rag-step" data-step="retrieve"><i class='bx bx-search-alt'></i> Retrieve</span>
-                                <span class="rag-step" data-step="generate"><i class='bx bx-bot'></i> Generate</span>
-                            </div>
+    <span class="rag-step" data-step="embed"><i class='bx bx-vector'></i> Vectorize</span>
+    <span class="rag-step" data-step="retrieve"><i class='bx bx-search-alt'></i> Retrieve</span>
+    <span class="rag-step" data-step="generate"><i class='bx bx-bot'></i> Generate</span>
+</div>
 
                             <p class="hcr-output__status" id="rag-status">Ask something to see the retrieved sources.</p>
 
@@ -123,37 +123,37 @@
         </section>
 
         <!--=============== INFO CARDS ===============-->
-        <section class="project-info section">
-            <div class="project__info container">
+<section class="project-info section">
+    <div class="project__info container">
 
-                <div class="project__card">
-                    <i class='bx bx-data project__card-icon'></i>
-                    <h3 class="project__card-title">Knowledge Base</h3>
-                    <p class="project__card-text">Write what documents the assistant uses and how they are chunked.</p>
-                </div>
+        <div class="project__card">
+            <i class='bx bx-data project__card-icon'></i>
+            <h3 class="project__card-title">Knowledge Base</h3>
+            <p class="project__card-text">500+ generated error logs spanning backend APIs, ML, and data engineering, paired with exact technical fixes.</p>
+        </div>
 
-                <div class="project__card">
-                    <i class='bx bx-brain project__card-icon'></i>
-                    <h3 class="project__card-title">Model</h3>
-                    <p class="project__card-text">Write the LLM, embedding model and vector database you used.</p>
-                </div>
+        <div class="project__card">
+            <i class='bx bx-brain project__card-icon'></i>
+            <h3 class="project__card-title">Architecture</h3>
+            <p class="project__card-text">TF-IDF retrieval with cosine similarity, paired with llama3.2 via Groq API for precise answer generation.</p>
+        </div>
 
-                <div class="project__card">
-                    <i class='bx bx-bar-chart-alt-2 project__card-icon'></i>
-                    <h3 class="project__card-title">How It Works</h3>
-                    <p class="project__card-text">Query is embedded, top-k chunks are retrieved, and the LLM answers from them.</p>
-                </div>
+        <div class="project__card">
+            <i class='bx bx-bar-chart-alt-2 project__card-icon'></i>
+            <h3 class="project__card-title">Pipeline</h3>
+            <p class="project__card-text">Vectorizes user queries to retrieve the top 3 matching logs, forcing the LLM to synthesize facts without hallucinating.</p>
+        </div>
 
-                <div class="project__card">
-                    <i class='bx bxl-github project__card-icon'></i>
-                    <h3 class="project__card-title">Source Code</h3>
-                    <a href="https://github.com/pratikprashant" target="_blank" class="project__card-link">
-                        View on GitHub <i class='bx bx-right-arrow'></i>
-                    </a>
-                </div>
+        <div class="project__card">
+            <i class='bx bxl-github project__card-icon'></i>
+            <h3 class="project__card-title">Source Code</h3>
+            <a href="https://github.com/pratikprashant" target="_blank" class="project__card-link">
+                View on GitHub <i class='bx bx-right-arrow'></i>
+            </a>
+        </div>
 
-            </div>
-        </section>
+    </div>
+</section>
     </main>
 
     <footer class="project__footer">
@@ -161,7 +161,6 @@
     </footer>
 
     <script src="../assets/js/project.js"></script>
-    <script src="../assets/js/rag-assistant.js"></script>
 </body>
 
 </html>
