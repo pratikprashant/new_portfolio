@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--=============== FAVICON ===============-->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="assets/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="assets/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#a789d4">
+
+    <meta name="description" content="Prashant Pratik Timalsina's portfolio is a work in progress. Something good is being built.">
+
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/wip.css">
+
+    <title>Prashant | Work in Progress</title>
+</head>
+
+<body>
+    <main class="wip">
+        <div class="wip__glow wip__glow--one"></div>
+        <div class="wip__glow wip__glow--two"></div>
+
+        <div class="wip__container">
+
+            <a href="wip.html" class="wip__logo">Prashant</a>
+
+            <span class="wip__badge">
+                <i class="wip__pulse"></i> Work in progress
+            </span>
+
+            <h1 class="wip__title">Something <span>awesome</span> is loading...</h1>
+
+            <p class="wip__text">
+                I'm Prashant, an AI/ML engineer. My portfolio is being built right now.
+                Projects, demos and case studies are on the way.
+            </p>
+
+            <!-- Terminal (JS types this out; the text below is the no-JS fallback) -->
+            <div class="wip__terminal" id="wip-terminal">
+                <div class="terminal__dots">
+                    <span></span><span></span><span></span>
+                </div>
+
+                <div class="wip__line">
+                    <span class="wip__prompt">prashant@linux:~$</span>
+                    <span class="wip__cmd">whoami</span>
+                    <div class="wip__out">Prashant Pratik Timalsina, AI/ML Engineer</div>
+                </div>
+
+                <div class="wip__line">
+                    <span class="wip__prompt">prashant@linux:~$</span>
+                    <span class="wip__cmd">status --portfolio</span>
+                    <div class="wip__out">building... please check back soon</div>
+                </div>
+            </div>
+
+            <!-- Progress: change data-progress (0-100) as you go -->
+            <div class="wip__progress" data-progress="65">
+                <div class="wip__progress-top">
+                    <span>Portfolio build</span>
+                    <span class="wip__progress-pct" id="wip-pct">0%</span>
+                </div>
+                <div class="wip__track">
+                    <div class="wip__fill" id="wip-fill"></div>
+                </div>
+            </div>
+
+            <!-- Checklist: edit freely. Classes: is-done | is-doing | is-todo -->
+            <ul class="wip__list">
+                <li class="wip__item is-done">
+                    <i class='bx bx-check-circle'></i> Portfolio design and layout
+                </li>
+                <li class="wip__item is-done">
+                    <i class='bx bx-check-circle'></i> Interactive project demo pages
+                </li>
+                <li class="wip__item is-doing">
+                    <i class='bx bx-loader-alt bx-spin'></i> Connecting models and backends
+                </li>
+                <li class="wip__item is-todo">
+                    <i class='bx bx-time-five'></i> Final projects and case studies
+                </li>
+            </ul>
+
+            <div class="wip__social">
+                <a href="https://github.com/pratikprashant" target="_blank" rel="noopener" class="home__social-link"
+                    aria-label="GitHub">
+                    <i class='bx bxl-github'></i>
+                </a>
+                <a href="https://www.instagram.com/pratikprashant07/" target="_blank" rel="noopener"
+                    class="home__social-link" aria-label="Instagram">
+                    <i class='bx bxl-instagram'></i>
+                </a>
+                <a href="mailto:mail@prashantpratik.com.np" class="home__social-link" aria-label="Email">
+                    <i class='bx bx-envelope'></i>
+                </a>
+            </div>
+
+            <span class="wip__copy">&#169; 2026 Prashant. All rights reserved.</span>
+
+        </div>
+    </main>
+
+    <script src="assets/js/wip.js"></script>
+</body>
+
+</html>

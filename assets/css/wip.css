@@ -1,0 +1,316 @@
+/*=============== WORK IN PROGRESS PAGE ===============
+   Save as assets/css/wip.css (delete it when you launch) */
+
+.wip {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+  overflow: hidden;
+  background-image:
+    linear-gradient(hsla(var(--first-hue), var(--sat), var(--lig), 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, hsla(var(--first-hue), var(--sat), var(--lig), 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Soft glowing blobs */
+.wip__glow {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.wip__glow--one {
+  top: -120px;
+  left: -120px;
+  background: hsl(var(--first-hue), var(--sat), var(--lig));
+  animation: wip-float 12s ease-in-out infinite;
+}
+
+.wip__glow--two {
+  bottom: -140px;
+  right: -120px;
+  background: hsl(207, 90%, 60%);
+  animation: wip-float 15s ease-in-out infinite reverse;
+}
+
+@keyframes wip-float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(40px, 30px); }
+}
+
+/* ---------- Content ---------- */
+.wip__container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  row-gap: 1.25rem;
+}
+
+.wip__logo {
+  color: var(--first-color);
+  font-weight: var(--font-medium);
+  font-size: var(--h3-font-size);
+  transition: 0.4s;
+}
+
+.wip__logo:hover {
+  color: var(--first-color-alt);
+}
+
+.wip__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--first-color);
+  border-radius: 2rem;
+  color: var(--first-color);
+  font-size: var(--smaller-font-size);
+  font-weight: var(--font-medium);
+  background-color: hsla(var(--first-hue), var(--sat), var(--lig), 0.08);
+}
+
+.wip__pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #4ade80;
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+  animation: wip-pulse 1.8s infinite;
+}
+
+@keyframes wip-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+  70% { box-shadow: 0 0 0 9px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+.wip__title {
+  font-size: clamp(2rem, 7vw, 3.25rem);
+  line-height: 1.15;
+}
+
+.wip__title span {
+  background: linear-gradient(90deg, var(--first-color), hsl(207, 90%, 72%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.wip__text {
+  max-width: 460px;
+  font-size: var(--normal-font-size);
+}
+
+/* ---------- Terminal ---------- */
+.wip__terminal {
+  width: 100%;
+  max-width: 460px;
+  padding: 0.9rem 1.1rem 1rem;
+  text-align: left;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.9rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  font-family: "Courier New", monospace;
+  font-size: var(--small-font-size);
+}
+
+.wip__line {
+  line-height: 1.7;
+}
+
+.wip__prompt {
+  color: var(--first-color);
+}
+
+.wip__cmd {
+  color: var(--title-color);
+}
+
+.wip__out {
+  color: var(--text-color);
+  margin-bottom: 0.4rem;
+  overflow-wrap: anywhere;
+}
+
+.wip__line--idle {
+  margin-top: 0.1rem;
+}
+
+.wip__cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background-color: var(--first-color);
+  animation: wip-blink 1s steps(2, start) infinite;
+}
+
+@keyframes wip-blink {
+  to { visibility: hidden; }
+}
+
+/* ---------- Progress ---------- */
+.wip__progress {
+  width: 100%;
+  max-width: 460px;
+}
+
+.wip__progress-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: var(--small-font-size);
+  color: var(--title-color);
+  font-weight: var(--font-medium);
+}
+
+.wip__progress-pct {
+  font-family: "Courier New", monospace;
+  color: var(--first-color);
+}
+
+.wip__track {
+  height: 10px;
+  border-radius: 1rem;
+  background-color: var(--container-color);
+  overflow: hidden;
+}
+
+.wip__fill {
+  position: relative;
+  width: 0;
+  height: 100%;
+  border-radius: 1rem;
+  background: linear-gradient(90deg, var(--first-color), hsl(207, 90%, 72%));
+  box-shadow: 0 0 12px hsla(var(--first-hue), var(--sat), var(--lig), 0.6);
+  transition: width 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Moving shine on the bar */
+.wip__fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-100%);
+  animation: wip-shine 2.4s ease-in-out infinite;
+}
+
+@keyframes wip-shine {
+  to { transform: translateX(100%); }
+}
+
+/* ---------- Checklist ---------- */
+.wip__list {
+  width: 100%;
+  max-width: 460px;
+  display: grid;
+  row-gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  background-color: var(--container-color);
+  border-radius: 1.25rem;
+}
+
+.wip__item {
+  display: flex;
+  align-items: center;
+  column-gap: 0.6rem;
+  font-size: var(--small-font-size);
+}
+
+.wip__item i {
+  font-size: 1.25rem;
+}
+
+.wip__item.is-done i {
+  color: #4ade80;
+}
+
+.wip__item.is-doing {
+  color: var(--title-color);
+}
+
+.wip__item.is-doing i {
+  color: var(--first-color);
+}
+
+.wip__item.is-todo {
+  color: var(--text-color-light);
+}
+
+.wip__item.is-todo i {
+  color: var(--text-color-light);
+}
+
+/* ---------- Social + footer ---------- */
+.wip__social {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.wip__social .home__social-link {
+  padding: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.wip__copy {
+  font-size: var(--smaller-font-size);
+  color: var(--text-color-light);
+}
+
+/* ---------- Entrance animation ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .wip__container > * {
+    animation: wip-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .wip__container > :nth-child(1) { animation-delay: 0.05s; }
+  .wip__container > :nth-child(2) { animation-delay: 0.15s; }
+  .wip__container > :nth-child(3) { animation-delay: 0.25s; }
+  .wip__container > :nth-child(4) { animation-delay: 0.35s; }
+  .wip__container > :nth-child(5) { animation-delay: 0.45s; }
+  .wip__container > :nth-child(6) { animation-delay: 0.55s; }
+  .wip__container > :nth-child(7) { animation-delay: 0.65s; }
+  .wip__container > :nth-child(8) { animation-delay: 0.75s; }
+  .wip__container > :nth-child(9) { animation-delay: 0.85s; }
+
+  @keyframes wip-in {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wip__glow,
+  .wip__pulse,
+  .wip__fill::after,
+  .wip__cursor {
+    animation: none;
+  }
+
+  .wip__fill {
+    transition: none;
+  }
+}
